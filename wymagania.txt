@@ -1,0 +1,26 @@
+1.Grafika:
+	-Gracz
+	-postacie inne (3)
+	-boss
+	-mapy (5)
+	-UI (podczas poruszania)
+	-UI (Podczas Walki)
+	-itemy
+
+2.Kod
+	I.Klasy
+		-System dialogów
+		-Gracz
+			-Ekwipunek
+		-Postacie
+			-Atak
+		-Item -> leczący/broń
+		-Mapa (na siatce)
+			-Kafelek
+		
+		
+3.Wyświetlanie na ekranie
+	-Poruszanie postaci
+	-Walka i poruszanie podczas niej
+	-mapa
+	
