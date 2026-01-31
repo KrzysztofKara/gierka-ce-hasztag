@@ -9,18 +9,29 @@
 
 2.Kod
 	I.Klasy
-		-System dialogów
-		-Gracz
+		-ObecnyStanGry (walka, eksploracja, dialog)
+		-Gracz { hp, maxHp, tekstura, prędkośćPoruszania, prędkośćPoruszania (w walce), ListaFlag (referencja) }
 			-Ekwipunek
-		-Postacie
-			-Atak
-		-Item -> leczący/broń
+				-ListaItemów{
+					-Item{ użycia, tekstura }
+						* Leczący{ ileLeczy }
+						* Broń{ dmg }
+					-IlośćItemu
+				-Wybrana Broń (dmg)
 		-Mapa (na siatce)
-			-Kafelek
-		
+			-Kafelek{}
+			-Postacie { hp, czyŻyje, czyNasLubi, ListaFlag (referencja) }
+				-ataki { Atak { dmg, id } }
+				-Dialog
+					-LiniaDialogu { tekst, id }
+						-OpcjaDialogu { tekst, idNastępnejLini }
+
+
+	II.Lista flag ( np. czy odbył się dialog (true/false))
 		
 3.Wyświetlanie na ekranie
 	-Poruszanie postaci
 	-Walka i poruszanie podczas niej
 	-mapa
 	
+
