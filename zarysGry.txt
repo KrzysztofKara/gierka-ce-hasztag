@@ -1,0 +1,188 @@
+Jako Zwykła osoba wpadasz do nieznanego ci uniwersum. W trakcie twojej przygody napotkasz wiele stworzeń z którymi możesz wejść w interakcję. 
+Będą cię atakować i to od ciebie zależy co postanowisz z nimi zrobić. Porozmawiasz z nimi? a może wyciągniesz broń i odpowiesz ogniem na ogień. Pamiętaj, każdy wyboór ma swoje konsekwencje
+
+
+Elementy gry:
+
+1.Okno walki:
+
+    Tura gracza:
+
+        (Może być poprzedzona komentarzem postaci (tekst pojawi się przy jej głowie))
+
+
+        =============================================================
+        =                                                           =
+        =                         ===          (jego tekst)         =
+        =                         === (to coś co spotkaliśmy)       =
+        =                         ===                               =
+        =                                                           =
+        =       ===========================================         =
+        =       =           (Pole na nasze wybory)        =         =
+        =       =         (oraz na ewentualną walkę)      =         =
+        =       ===========================================         =
+        =                       Twoje HP                            =
+        =                                                           =
+        =             WALCZ   AKCJA   ITEM    LITOŚĆ                =
+        =============================================================
+
+        I.WALCZ:
+            jak wybierzemy walkę to w miejscu na nasze wybory pokazuje nam się tekstura z poziomami naładowania ataku. 
+            Jej pozycja jest losowa a gracz musi trafić w sam środek tekstury żeby zadać maksymalne obrażenia. wskaźnik ataku przesuwa się z prawej do lewej. (jedna kreska)
+
+                    ============================================ 
+                = 10|  40% |  80%|60|10|60| 80%|  40% | 10%= 
+                =  %|      |     | %|0%| %|    |      |    = 
+                ============================================
+
+        II.AKCJA:
+            Jak wybierzemy akcję to możemy wybrać co chcemy zrobić:
+                -sprawdzić statystyki postaci i jej krótki opis ktory może nam pomóc wybrać odpowiednie akcje (np. że postać wydaje się smutna to żeby z nią wygrać możemy ją pocieszyć)
+                -wybrać jakąś opcję np.
+                    *porozmawiać
+                    *zażartować
+                    *obrazić
+                    *opowiedzieć dowcip
+                    *spróbować się z nią pobawić (np. w undertale jest pieseł który ma opcję zabawy)
+                    *jakąkolwiek opcję pasującą do postaci np. jak ktoś ma duży nos to możemy się wytażać w śniegu żeby zmniejszyć swój zapach.
+
+            AKCJA nie kończy zazwyczaj walki od razu (często może trwać dłużej niż gdybyśmy zabili postać) ale w ten sposób można zakończyć walkę w pokojowy sposób.
+            (wyjątkiem będzie pierwsza postać która od razu zakończy walkę jak wybierzemy rozmowę)
+            Po udanych akcjach będzie dostępna opcja LITOŚĆ -> DARUJ (postać puszcza nas wolno)
+
+
+        III.ITEM:
+            Możemy podczas walki użyć itemu z ekwipunku żeby się uleczyć. (tracimy wtedy turę)
+
+        IV.LITOŚĆ:
+            Z postaciami które napotkamy podczas chodzenia po mapie i rozwiązywaniu puzzli mamy dostępne dwie opcje:
+                -UCIECZKA (po prostu opuszczamy walkę, dostępne tylko dla losowo spotkanych postaci (podczas rozwiązywania puzzli)) 
+                -DARUJ (będzie się podświetlać jak uda się nam przekonać postać przez rozmowę do darowania nam, 
+                        lub możemy od początku w nią klikać co turę aby w końcu postać puściła nas wolno)
+
+    
+    
+    Tura Postaci:
+
+        I.Komentarz:
+            -Jak wybierzemy WALCZ to może powiedzieć *ouch* czy jakoś inaczej skomentować
+            -Jak wybierzemy AKCJA to może odpowiecieć na to co zrobimy (np. jak opowiemy jakiś żart to postać się może zaśmiać (lub nie)) 
+
+        II.Atak:
+            -nasze pole na wybory zmienia się na okno w którym mamy serduszko którym sterujemy i musimy unikać ataków. Rozmiar pola może być różny ale lepiej jakby się nie zmnieniał.
+            -postać może też zaniechać ataku (jak zdecyduje się nam Darować) wtedy znwu mamy turę gracza który może przyjąć darowanie w polu LITOŚĆ -> DARUJ. Wtedy walka się kończy.
+
+
+    Walka trwa dopóki gracz/postać zginie lub gdy postać DARUJE graczowi i gracz tą ofertę przyjmie
+
+
+
+2.Mapay
+
+    (mapy mogą być połączone w jedną lokację jakby to miało ułatwić resetowanie puzzli) 
+    (Pomięzdzy mapami przenosimy się przyciemniając ekran)
+
+    I.Elementy:
+        -skrzynki w których możemy znaleźć nowe itemy
+        -puzzle które trzeba ułożyć (np. ustawić kilka dźwigni odpowiednio, przyciski wcisnąć) po których ułożeniu otwiera nam się dalsza część mapy 
+         (obniżają się kolce lub ściana (do ustalenia))
+        -tabliczki które możemy przeczytać podpowiadające nam jak mamy zrobić puzzle
+        -eventy że spotykamy jakąś pomniejszą postać (dźwięk -> wykrzyknik przy naszej postaci -> okno walki) od których możemy uciec (LITOŚĆ -> UCIEKNIJ) 
+    
+    II."Zwykła postać":
+        -NPC z którym możemy odbyć jakiś dialog. (te "dialogi" to tak naprawdę monologi tych postaci które przeklikujemy enterem)
+
+    III."Postać strażnik":
+        -Na końcu każdej lokacji będzie jakaś postać fabularna która nam blokuje przejście (nie możemy więc od niej uciec bo chcemy progresować dalej)
+         Wtedy z nią możemy walczyć albo wybrać AKCJA i jakoś ją przekonać aby puściła nas dalej albo spamować 10 razy od początku LITOŚĆ -> DARUJ żeby się nad nami zlitowała
+        
+    
+3.Boss fight:
+    z bossem możemy rówież rozmawiać i wygrać grę pokojowo jednak jeśli zabijemy wcześniej jakieś dwie inne postacie to nie będzie chciał współpracować i zignoruje nasze prośby.
+    będziemy musieli dużo spamować LITOŚĆ -> DARUJ żeby ostatecznie pokojowo zakończyć walkę 
+
+
+4.Ekran końcowy:
+    jak wygramy i przejdziemy przez ostatnie drzwi to pokaże się animacja czy cuś. (może być shreck w T-pose który powie "what are you doing in my swamp?!" albo "you are my shunshine, my little shunshine" z lebronem XD)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Gra:
+
+Na początku jesteśmy na ciemnej mapie, spotykamy coś? kogoś? dziwnie wyglądającego i podchodzimy. Wtedy odpala się okno walki
+
+=============================================================
+=                                                           =
+=                         ===          (jego tekst)         =
+=                         === (to coś co spotkaliśmy)       =
+=                         ===                               =
+=                                                           =
+=       ===========================================         =
+=       =           (Pole na nasze wybory)        =         =
+=       =         (oraz na ewentualną walkę)      =         =
+=       ===========================================         =
+=                       Twoje HP                            =
+=                                                           =
+=             WALCZ   AKCJA   ITEM    LITOŚĆ                =
+=============================================================
+
+(Każda walka zaczyna się od tury gracza ale może być poprzedzona słowami opponenta. Po wyborze akcji postać też może ją skometować. Jak wybierzemy Rozmowę to może się nam pokazać jak zareagowała na nasze słowa)
+
+Zachowanie postaci będzie zależeć od tego co zrobi gracz. 
+1.Jak wybierze Rozmowę (AKCJA -> ROZMAWIAJ) to pojawi się napis *spróbowałeś wytłumaczyć [temu komuś] że nie nie wiesz gdzie jesteś i jak tu trafiłeś* 
+pokaże się nam *[ten ktoś] zainteresował się* i postać powie nam że to jest jakiś tam świat, że trzeba uważać na każdego kogo spotkamy.
+Powie, że możemy po spotkaniu kogoś z nim porozmawiać (doda *o tym już pewnie wiesz jak mniemam*) 
+darować życie lub spróbować uciec choć nie zawsze może to być możliwe a Ostatecznością jest walka. Potem powie że pokaże nam słaby atak żebyśmy zobaczyli jak się bronić. 
+Na końcec powie że aby progresować trzeba rozwiązywać puzle, życzy nam powodzenia i walka się kończy. Nasze HP jeśli jakieś stracimy zostanie przywrócone.
+
+2.W wypadku wybrania Opcji LITOŚĆ i potem OSZCZĘDŹ postać skomentuje *śmieszna z ciebie istota, ale wiesz? pomogę ci* dalej będzie to co w punkcie 1.
+
+3.Jeśli stwierdzi że chce atakować to postać stanie się do nas negatywna i powie nam coś w stylu *Ja bym tam wolał porozmawiać ale jak tam uważasz. POWODZENIA [: *
+Przy próbach rozmowy nie odpowie nam i w naszym polu na rozmowy będzie napis *[ten ktoś] parsknął ironicznie*. Postać też może powiedzieć *na rozmowę już za późno*
+
+
+
+potem mamy mapę którą trzeba przejść wciskając odpowiednie dźwignie (jest ich 5 i trzeba użyć 3) trzeba znaleźć wzór w jakimś miejscu mapy.
+W tym może nam pomóc [ten ktoś] odpalając dialogi jak podejdziemy i klikniemy "e" albo "enter"
+
+
+=============================================================
+=                                                           =
+=                                     = (ta postać)         =
+=                             (my) =  =                     =
+=                                  =                        =
+=                                                           =
+=                                                           =
+=                                                           =
+=       ===========================================         =
+=       =          (jakiś tekst co będzie mówić)  =         =
+=       =                                         =         =
+=       ===========================================         =
+=                                                           =
+=============================================================
+
+
+
+Na mapie mogą też być skrzynki z itemami
+
+Podczas chodzenia po mapie możemy napotkać jakieś stworzenie. Nie pojawia się ono na mapie ani nic tylko jest np. jakiś dźwięk, przy graczu pojawia się mały dymek z wykrzyknikiem i przechodzimy do pola walki
+
+
+

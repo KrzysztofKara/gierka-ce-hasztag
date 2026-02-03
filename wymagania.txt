@@ -1,3 +1,6 @@
+Nie kierujcie się narazie tym bo tu trzeba wiele pozmieniać jak cuś
+
+
 1.Grafika:
 	-Gracz
 	-postacie inne (3)
@@ -9,25 +12,28 @@
 
 2.Kod
 	I.Klasy
-		-ObecnyStanGry (walka, eksploracja, dialog)
-		-Gracz { hp, maxHp, tekstura, prędkośćPoruszania, prędkośćPoruszania (w walce), ListaFlag (referencja) }
+		-Gracz { hp, maxHp, bazowyDmg, tekstura, prędkośćPoruszania, prędkośćPoruszania (w walce), SłownikFlag (referencja) }
+			-ObecnyStanGry (walka, eksploracja, dialog)
 			-Ekwipunek
-				-ListaItemów{
+				-ListaItemów
 					-Item{ użycia, tekstura }
 						* Leczący{ ileLeczy }
 						* Broń{ dmg }
-					-IlośćItemu
-				-Wybrana Broń (dmg)
-		-Mapa (na siatce)
-			-Kafelek{}
-			-Postacie { hp, czyŻyje, czyNasLubi, ListaFlag (referencja) }
-				-ataki { Atak { dmg, id } }
-				-Dialog
-					-LiniaDialogu { tekst, id }
-						-OpcjaDialogu { tekst, idNastępnejLini }
+						* Zbroja
+					-ilośćItemu
+				-Wybrana Broń{ dmg }
+				-Wybrana Zbroja
+		-Mapa
+			-Postacie { nazwa, hp, czyŻyje, czyNasLubi, x, y, SłownikFlag (referencja) }
+				-ListaAtaków { Atak { dmg, id } }
+				-ListaDialogów { idObecnejLini, wymagania, efekty } 
+					-LiniaDialogu { id, czasWyświetlania }
+						-OpcjeDialogu { ListaWyborów<string> (jak jednoelementowa traktowana jako zwykły dialog), idNastępnejLini, wymagania, efekty }
+					~metodaCzyMożeRozpocząć { SłownikFlag, Gracz } -> true/false
+					~metodaProgresujDialog { wybranaOpcjaDialogu, SłownikFlag, Gracz } -> ListaWyborów (jak 0 elementów to dialog skończony)
 
 
-	II.Lista flag ( np. czy odbył się dialog (true/false))
+	II.Słownik flag<string, bool> ( np. czy odbył się dialog (true/false))
 		
 3.Wyświetlanie na ekranie
 	-Poruszanie postaci
