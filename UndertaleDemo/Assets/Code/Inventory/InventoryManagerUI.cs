@@ -1,0 +1,435 @@
+using System.Collections.Generic;
+using UnityEngine;
+enum Menu
+{
+    Options,
+    Inventory,
+    ItemOptions,
+    Stats
+}
+
+public class InventoryManagerUI : MonoBehaviour
+{
+    [SerializeField] private GameObject _Inventory;
+    [SerializeField] private GameObject _QuickInfo;
+    [SerializeField] private GameObject _Stats;
+    [SerializeField] private GameObject _Options;
+    [SerializeField] private InventorySlot _SlotPrefab;
+    [SerializeField] private Transform _SlotsParent;
+    private List<InventorySlot> _slots = new ();
+    [SerializeField] private QuickInfo quickStats;
+    [SerializeField] private Stats stats;
+
+    //Skrypt gracza (statystyki, inventory)
+    [SerializeField] private Player player;
+    //Na której opcji jesteœmy (Staty/Itemy)
+    [SerializeField] private int OptionIndex = 0;
+    //Na którym itemie jesteœmy
+    [SerializeField] private int ItemIndex = -1;
+    //Na której opcji u¿ycia itemu jestesmy
+    [SerializeField] private int ItemOptionIndex = -1;
+    [SerializeField] private Menu CurrentMenu = Menu.Options;
+
+
+    private void OnEnable()
+    {
+        player.OnPlayerHpChanged += UpdateHP;
+        player.OnPlayerLvlChanged += UpdateLvl;
+        player.OnPlayerGoldChanged += UpdateGold;
+
+        player.inventory.OnInventoryChanged += UpdateSlots;
+        player.inventory.OnWeaponChanged += UpdateWeapon;
+        player.inventory.OnArmorChanged += UpdateArmor;
+    }
+
+    private void OnDisable()
+    {
+        player.OnPlayerHpChanged -= UpdateHP;
+        player.OnPlayerLvlChanged -= UpdateLvl;
+        player.OnPlayerGoldChanged -= UpdateGold;
+
+        player.inventory.OnInventoryChanged -= UpdateSlots;
+        player.inventory.OnWeaponChanged -= UpdateWeapon;
+        player.inventory.OnArmorChanged -= UpdateArmor;
+    }
+
+
+    private void Start()
+    {
+        Item item1 = new Item("cep bojowy", "Potê¿na broñ", 2137, TypeOfItem.Weapon, damage: 10);
+        Item item2 = new Item("wiadro", "Jakieœ wiadro które znalaz³es u dziadka na gospodarstwie, ma dziurê na oczy", 2137, TypeOfItem.Armor, protection:24);
+        Item item3 = new Item("Odwar z Nagietka", "Uwa¿ony przez cyrulika Henryka", 2137, TypeOfItem.Healing, healingAmount:10);
+        Item item4 = new Item("patyk", "Jakiœ patyk, chyba oogway'a", 2137, TypeOfItem.Default);
+        player.inventory.AddItem(item1);
+        player.inventory.AddItem(item2);
+        player.inventory.AddItem(item3);
+        player.inventory.AddItem(item4);
+
+    }
+
+    void Update()
+    {
+        if (_Inventory == null || _QuickInfo == null || _Inventory == null || _QuickInfo == null) 
+        {
+            Debug.LogWarning("Inventory, QuickInfo, Stats lub Options s¹ null");
+            return;
+        }
+
+
+        //Jeœli gracz wciœnie ctrl i nie bêdzie w statystykach lub inventory to opcje i QuickInfo siê wyœwietl¹/schowaj¹
+        if (SwichInventoryUI())
+        {
+
+        }
+        
+
+        //Jeœli nie mamy w³¹czonego UI to nie mo¿emy siê po nim poruszaæ
+        if (!_Options.activeSelf)
+        {
+            return;
+        }
+
+        //gracz wybiera opcjê/item
+        ChooseOptionOrItem();
+
+        //Jeœli gracz wciœnie Enter to przechodzimy dalej z UI (opcje ->Itemy/Staty -> Opcje u¿ycia itemu)
+        ProgressUI();
+
+
+        //Cofanie po wciœniêciu Shift'a
+        GetBackOrClose();
+
+
+
+    }
+
+
+    //Aktywowanie lub wy³aczamie UI do Opcji i Szybkich statystyk (wybiera opcjê) 
+    private bool SwichInventoryUI()
+    {
+        if (Input.GetKeyDown(KeyCode.RightControl) && !_Inventory.activeSelf && !_Stats.activeSelf)
+        {
+            _Options.SetActive(!_Options.activeSelf);
+            _QuickInfo.SetActive(!_QuickInfo.activeSelf);
+
+            SelectOption(OptionIndex, true);
+
+            return true;
+        }
+        return false;
+    }
+
+    //Aktualizowanie wszystkich Statystyk w Inventory UI 
+
+    private void UpdateGold(int gold)
+    {
+        stats.SetGold(gold);
+        quickStats.SetGold(gold);
+    }
+
+    private void UpdateHP(int hp, int baseHp)
+    {
+        stats.SetHp(hp, baseHp);
+        quickStats.SetHp(hp, baseHp);
+    }
+
+    private void UpdateLvl(int lvl)
+    {
+        stats.SetLvl(lvl);
+        quickStats.SetLvl(lvl);
+    }
+
+    private void UpdateWeapon(string name, int damage)
+    {
+        stats.SetWeapon(name);
+        stats.SetAtack(damage);
+    }
+
+    private void UpdateArmor(string name, int protection)
+    {
+        stats.SetArmor(name);
+        stats.SetDefence(protection);
+    }
+
+
+    //Aktualizowanie Wszystkich Slotów w Inventory UI
+    private void UpdateSlots(int count)
+    {
+        ClearSlots();
+
+        CreateSlots(count);
+
+        for (int i = 0; i < count; i++)
+        {
+            SetItemNameInSlot(i, player.inventory.Items[i].Name);
+        }
+    }
+
+    //Tworzy okreœlon¹ liczbê slotów w Inventory UI
+    private void CreateSlots(int amount)
+    {
+        for (int i = 0; i < amount; i++)
+        {
+            InventorySlot slot = Instantiate(_SlotPrefab, _SlotsParent, false);
+            slot.SetItemName("Empty");
+            _slots.Add(slot);
+        }
+    }
+
+    //Ustawia Nazwê itemu w Slocie
+    private void SetItemNameInSlot(int index, string itemName)
+    {
+        if (index < 0 || index >= _slots.Count)
+            return;
+
+        _slots[index].SetItemName(itemName);
+    }
+
+    //Usuwa slot o podanym id
+    private void RemoveSlot(int index)
+    {
+        if (index < 0 || index >= _slots.Count)
+            return;
+
+        Destroy(_slots[index].gameObject);
+        _slots.RemoveAt(index);
+    }
+
+    //Usuwa wszystkie sloty
+    public void ClearSlots()
+    {
+        foreach (InventorySlot slot in _slots)
+        {
+            Destroy(slot.gameObject);
+        }
+
+        _slots.Clear();
+    }
+
+    //po wciœniêciu Shift'a patrzymy na to co jest otwarte i cofamy siê do poprzedniego elementu UI lub je zamykamy (ustawia te¿ CurrentMenu)
+    private void GetBackOrClose()
+    {
+        if (Input.GetKeyDown(KeyCode.RightShift))
+        {
+            //Jak jesteœmy w Opcjach w pierwszym menu
+            if (CurrentMenu == Menu.Options)
+            {
+                _Options.SetActive(false);
+                _QuickInfo.SetActive(false);
+            }
+            //Jesteœmy w Statystykach
+            else if (CurrentMenu == Menu.Stats)
+            {
+                _Stats.SetActive(false);
+                OptionIndex = 1;
+                CurrentMenu = Menu.Options;
+
+                SelectOption(1, true);
+            }
+            //Jak jesteœmu w Opcjach u¿ycia itemu
+            else if (CurrentMenu == Menu.ItemOptions)
+            {
+                SelectOption(ItemOptionIndex, false);
+                ItemOptionIndex = -1;
+
+                CurrentMenu = Menu.Inventory;
+                SelectOption(ItemIndex, true);
+            }
+            //Jak jesteœmy w inventory
+            else if (CurrentMenu == Menu.Inventory)
+            {
+                _Inventory.SetActive(false);
+                OptionIndex = 0;
+                SelectOption(ItemIndex, false);
+
+                ItemIndex = -1;
+                CurrentMenu = Menu.Options;
+                SelectOption(0, true);
+            }
+            
+        }
+    }
+
+    //po wciœniêciu enter patrzy na obecny wybór i zmienia UI (ustawia te¿ CurrentMenu)
+    private void ProgressUI()
+    {
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+
+            //Jak jesteœmy w opcjach to przenosimy siê do Inventory/Statystyk 
+            if (OptionIndex == 0)
+            {
+                _Inventory.SetActive(true);
+                SelectOption(OptionIndex, false);
+                OptionIndex = -1;
+                CurrentMenu = Menu.Inventory;
+
+                //Jak nasze Inventory jest puste to nic nie wybieramy
+                if (_slots.Count == 0) { return; }
+                ItemIndex = 0;
+                SelectOption(0, true);
+            }
+            else if (OptionIndex == 1)
+            {
+                _Stats.SetActive(true);
+                SelectOption(OptionIndex, false);
+                OptionIndex = -1;
+
+                CurrentMenu = Menu.Stats;
+            }
+            //Jak jesteœmy w opcjach u¿ycia itemu to coœ siê dzieje (na razie nic)
+            else if (ItemOptionIndex == 0)
+            {
+                Debug.Log("U¿ycie itemu");
+                player.UseItem(ItemIndex);
+                CloseInventoryUI();
+            }
+            else if (ItemOptionIndex == 1)
+            {
+                Debug.Log("Informacje o itemie");
+                
+                CloseInventoryUI();
+            }
+            else if (ItemOptionIndex == 2) 
+            { 
+                Debug.Log("Wyrzucenie itemu");
+                RemoveSlot(ItemIndex);
+                player.inventory.RemoveItem(index:ItemIndex);
+                CloseInventoryUI();
+            }
+            //Jak jesteœmy w Inventory to przechodzimy do Menu z opcjami itemu 
+            else if (CurrentMenu == Menu.Inventory && _slots.Count > 0)
+            {
+                SelectOption(ItemIndex, false);
+                CurrentMenu = Menu.ItemOptions;
+
+                SelectOption(0, true);
+                ItemOptionIndex = 0;
+            }
+        }
+    }
+
+    
+    private void ChooseOptionOrItem()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            SetIndexes(0);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            SetIndexes(1);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            SetIndexes(2);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            SetIndexes(3);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            SetIndexes(4);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha6))
+        {
+            SetIndexes(5);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha7))
+        {
+            SetIndexes(6);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha8))
+        {
+            SetIndexes(7);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha9))
+        {
+            SetIndexes(8);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha0))
+        {
+            SetIndexes(9);
+        }
+    }
+
+
+    //ustawia indeksy
+    private void SetIndexes(int index)
+    {
+        //Kiedy Jesteœmy w pierwszym menu i przekazany index jest 0/1 to zmieniamy wybran¹ opcjê
+        if (CurrentMenu == Menu.Options && index < 2)
+        {
+            SelectOption(OptionIndex, false);
+            OptionIndex = index;
+            SelectOption(index, true);
+            
+        }
+        //Kiedy jesteœmy w menu z opcjami itemów to -||-
+        else if (CurrentMenu == Menu.ItemOptions && index < 3)
+        {
+            SelectOption(ItemOptionIndex, false);
+            ItemOptionIndex = index;
+            SelectOption(index, true);
+        }
+        //Kiedy jesteœmy w menu z itemami to zmnieniamy wybrany item
+        else if (CurrentMenu == Menu.Inventory && _slots.Count > index)
+        {
+            SelectOption(ItemIndex, false);
+            ItemIndex = index;
+            SelectOption(index, true);
+        }
+    }
+
+    //Dokopuje siê do grafiki serca w opcjach i je aktywuje lub wy³¹cza (sprawdza obecne menu)
+    private void SelectOption(int index, bool action)
+    {
+        if (index  < 0) { return; }
+
+        if (CurrentMenu == Menu.Options)
+        {
+            GameObject Heart = _Options.transform.GetChild(1).gameObject.transform.GetChild(index).gameObject.transform.GetChild(1).gameObject;
+
+            Heart.SetActive(action);
+        }
+        else if (CurrentMenu == Menu.Inventory)
+        {
+            if (_slots.Count <= index) { return; }
+
+            GameObject Heart = _SlotsParent.GetChild(index).gameObject.transform.GetChild(1).gameObject;
+
+            Heart.SetActive(action);
+        }
+        else if (CurrentMenu == Menu.ItemOptions)
+        {
+            GameObject Heart = _Inventory.transform.GetChild(1).gameObject.transform.GetChild(1).gameObject.transform.GetChild(index).gameObject.transform.GetChild(1).gameObject;
+
+            Heart.SetActive(action);
+        }
+    }
+
+    //Wy³¹cza ca³e Inventory UI i ustawia wszystkie zmienne do stanu pocz¹tkowego 
+    public void CloseInventoryUI()
+    {
+        SelectOption(OptionIndex, false);
+        SelectOption(ItemIndex, false);
+        SelectOption(ItemOptionIndex, false);
+
+        _Inventory.SetActive(false);
+        _Options.SetActive(false);
+        _QuickInfo.SetActive(false);
+        _Stats.SetActive(false);
+
+        CurrentMenu = Menu.Options;
+        OptionIndex = 0;
+        ItemIndex = -1;
+        ItemOptionIndex = -1;
+
+    }
+
+    
+}
+
+
+
