@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class DialogueZone : MonoBehaviour
 {
-    public DialogSystem dialogSystem;   // przeci¹gniesz tu obiekt z DialogSystem
-    public string dialogText = "Czeœæ!"; // tekst dla tego NPC
+    public InkDialogSystem dialogSystem;   
     private bool playerInside = false; 
     void Start()
     {
@@ -16,7 +15,7 @@ public class DialogueZone : MonoBehaviour
     {
         if (playerInside && Input.GetKeyDown(KeyCode.F))
         {
-            dialogSystem.OpenDialog(dialogText);
+            dialogSystem.StartDialog();
         }
     }
 
