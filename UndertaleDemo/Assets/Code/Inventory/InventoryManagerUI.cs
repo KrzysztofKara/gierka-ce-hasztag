@@ -10,24 +10,27 @@ enum Menu
 
 public class InventoryManagerUI : MonoBehaviour
 {
+    //Obiekty w UI podczas chodzenia po mapie
     [SerializeField] private GameObject _Inventory;
     [SerializeField] private GameObject _QuickInfo;
     [SerializeField] private GameObject _Stats;
     [SerializeField] private GameObject _Options;
-    [SerializeField] private InventorySlot _SlotPrefab;
-    [SerializeField] private Transform _SlotsParent;
-    private List<InventorySlot> _slots = new ();
-    [SerializeField] private QuickInfo quickStats;
-    [SerializeField] private Stats stats;
 
-    //Skrypt gracza (statystyki, inventory)
-    [SerializeField] private Player player;
-    //Na której opcji jesteœmy (Staty/Itemy)
-    [SerializeField] private int OptionIndex = 0;
-    //Na którym itemie jesteœmy
-    [SerializeField] private int ItemIndex = -1;
-    //Na której opcji u¿ycia itemu jestesmy
-    [SerializeField] private int ItemOptionIndex = -1;
+    [SerializeField] private InventorySlot _SlotPrefab; // Prefab do generowania slotów w inventory
+    [SerializeField] private Transform _SlotsParent; // Rodzic do którego bêd¹ do³¹czane prefaby slotów
+
+    private List<InventorySlot> _slots = new(); // Lista w której bêd¹ przechowywane referencje do slotów
+
+    [SerializeField] private QuickInfo quickStats; // Skrypt dla wyœwietlania szybkich statystyk (uzupe³nianie informacji)
+    [SerializeField] private Stats stats; // Skrypt dla wyœwietlania statystyk (uzupe³nianie informacji)
+    [SerializeField] private UsageOptions usageOptions; // Skrypt dla aktywowania serca w opcjach u¿ycia itemów
+    [SerializeField] private Options options; // Skrypt dla aktywowania serca w opcjach
+    [SerializeField] private Player player; // Skrypt gracza (statystyki, inventory)
+
+    [SerializeField] private int OptionIndex = 0; // Na której opcji jesteœmy (Staty/Itemy)
+    [SerializeField] private int ItemIndex = -1; // Na którym itemie jesteœmy
+    [SerializeField] private int ItemOptionIndex = -1; // Na której opcji u¿ycia itemu jesteœmy
+
     [SerializeField] private Menu CurrentMenu = Menu.Options;
 
 
@@ -60,10 +63,12 @@ public class InventoryManagerUI : MonoBehaviour
         Item item2 = new Item("wiadro", "Jakieœ wiadro które znalaz³es u dziadka na gospodarstwie, ma dziurê na oczy", 2137, TypeOfItem.Armor, protection:24);
         Item item3 = new Item("Odwar z Nagietka", "Uwa¿ony przez cyrulika Henryka", 2137, TypeOfItem.Healing, healingAmount:10);
         Item item4 = new Item("patyk", "Jakiœ patyk, chyba oogway'a", 2137, TypeOfItem.Default);
+        Item item5 = new Item("patyk2", "Jakiœ patyk2", 2137, TypeOfItem.Default);
         player.inventory.AddItem(item1);
         player.inventory.AddItem(item2);
-        player.inventory.AddItem(item3);
         player.inventory.AddItem(item4);
+        player.inventory.AddItem(item3);
+        player.inventory.AddItem(item5);
 
     }
 
@@ -277,7 +282,7 @@ public class InventoryManagerUI : MonoBehaviour
 
                 CurrentMenu = Menu.Stats;
             }
-            //Jak jesteœmy w opcjach u¿ycia itemu to coœ siê dzieje (na razie nic)
+            //U¿ycie itemu
             else if (ItemOptionIndex == 0)
             {
                 Debug.Log("U¿ycie itemu");
@@ -382,16 +387,18 @@ public class InventoryManagerUI : MonoBehaviour
         }
     }
 
-    //Dokopuje siê do grafiki serca w opcjach i je aktywuje lub wy³¹cza (sprawdza obecne menu)
+    //aktywuje lub wy³¹cza Serca (sprawdza obecne menu)
     private void SelectOption(int index, bool action)
     {
         if (index  < 0) { return; }
 
-        if (CurrentMenu == Menu.Options)
+        if (CurrentMenu == Menu.Options && index < 2)
         {
-            GameObject Heart = _Options.transform.GetChild(1).gameObject.transform.GetChild(index).gameObject.transform.GetChild(1).gameObject;
-
-            Heart.SetActive(action);
+            options.Active(index, action);
+        }
+        else if (CurrentMenu == Menu.ItemOptions && index < 3)
+        {
+            usageOptions.Active(index, action);
         }
         else if (CurrentMenu == Menu.Inventory)
         {
@@ -401,27 +408,26 @@ public class InventoryManagerUI : MonoBehaviour
 
             Heart.SetActive(action);
         }
-        else if (CurrentMenu == Menu.ItemOptions)
-        {
-            GameObject Heart = _Inventory.transform.GetChild(1).gameObject.transform.GetChild(1).gameObject.transform.GetChild(index).gameObject.transform.GetChild(1).gameObject;
-
-            Heart.SetActive(action);
-        }
+        
     }
 
     //Wy³¹cza ca³e Inventory UI i ustawia wszystkie zmienne do stanu pocz¹tkowego 
     public void CloseInventoryUI()
     {
-        SelectOption(OptionIndex, false);
-        SelectOption(ItemIndex, false);
+        CurrentMenu = Menu.ItemOptions;
         SelectOption(ItemOptionIndex, false);
+        CurrentMenu = Menu.Inventory;
+        SelectOption(ItemIndex, false);
+        CurrentMenu = Menu.Options;
+        SelectOption(OptionIndex, false);
+
 
         _Inventory.SetActive(false);
         _Options.SetActive(false);
         _QuickInfo.SetActive(false);
         _Stats.SetActive(false);
 
-        CurrentMenu = Menu.Options;
+        
         OptionIndex = 0;
         ItemIndex = -1;
         ItemOptionIndex = -1;
