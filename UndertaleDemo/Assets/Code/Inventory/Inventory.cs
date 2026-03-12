@@ -43,11 +43,12 @@ public class Inventory
 
     public bool RemoveItem(Item item = null, int index = -1)
     {
-        if (item == null) { return false; }
+        if (item == null && (index < 0 || index >= Items.Count)) { return false; }
 
         if (index > -1 && index < Items.Count)
         {
             Items.RemoveAt(index);
+            OnInventoryChanged?.Invoke(Items.Count); //Po usuniêciu itemu odpalamy event ¿eby UI siê odœwie¿y³o
             return true;
         }
 

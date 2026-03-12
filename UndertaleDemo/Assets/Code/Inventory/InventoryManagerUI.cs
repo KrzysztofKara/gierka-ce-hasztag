@@ -33,6 +33,10 @@ public class InventoryManagerUI : MonoBehaviour
 
     [SerializeField] private Menu CurrentMenu = Menu.Options;
 
+    // --- Sta³e ---
+    const int optionsCount = 2;
+    const int itemOptionsCount = 3;
+
 
     private void OnEnable()
     {
@@ -74,7 +78,7 @@ public class InventoryManagerUI : MonoBehaviour
 
     void Update()
     {
-        if (_Inventory == null || _QuickInfo == null || _Inventory == null || _QuickInfo == null) 
+        if (_Inventory == null || _QuickInfo == null || _Inventory == null || _Options == null) 
         {
             Debug.LogWarning("Inventory, QuickInfo, Stats lub Options s¹ null");
             return;
@@ -82,7 +86,7 @@ public class InventoryManagerUI : MonoBehaviour
 
 
         //Jeœli gracz wciœnie ctrl i nie bêdzie w statystykach lub inventory to opcje i QuickInfo siê wyœwietl¹/schowaj¹
-        if (SwichInventoryUI())
+        if (SwitchInventoryUI())
         {
 
         }
@@ -110,7 +114,7 @@ public class InventoryManagerUI : MonoBehaviour
 
 
     //Aktywowanie lub wy³aczamie UI do Opcji i Szybkich statystyk (wybiera opcjê) 
-    private bool SwichInventoryUI()
+    private bool SwitchInventoryUI()
     {
         if (Input.GetKeyDown(KeyCode.RightControl) && !_Inventory.activeSelf && !_Stats.activeSelf)
         {
@@ -298,7 +302,6 @@ public class InventoryManagerUI : MonoBehaviour
             else if (ItemOptionIndex == 2) 
             { 
                 Debug.Log("Wyrzucenie itemu");
-                RemoveSlot(ItemIndex);
                 player.inventory.RemoveItem(index:ItemIndex);
                 CloseInventoryUI();
             }
@@ -314,48 +317,15 @@ public class InventoryManagerUI : MonoBehaviour
         }
     }
 
-    
+    //Wybieranie Opcji/Itemów
     private void ChooseOptionOrItem()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        for (int i = 0; i < 10; i++)
         {
-            SetIndexes(0);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            SetIndexes(1);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            SetIndexes(2);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            SetIndexes(3);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha5))
-        {
-            SetIndexes(4);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha6))
-        {
-            SetIndexes(5);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha7))
-        {
-            SetIndexes(6);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha8))
-        {
-            SetIndexes(7);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha9))
-        {
-            SetIndexes(8);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha0))
-        {
-            SetIndexes(9);
+            if (Input.GetKeyDown(KeyCode.Alpha0 + i))
+            {
+                SetIndexes(i == 0 ? 9 : i - 1);
+            }
         }
     }
 
@@ -392,11 +362,11 @@ public class InventoryManagerUI : MonoBehaviour
     {
         if (index  < 0) { return; }
 
-        if (CurrentMenu == Menu.Options && index < 2)
+        if (CurrentMenu == Menu.Options && index < optionsCount)
         {
             options.Active(index, action);
         }
-        else if (CurrentMenu == Menu.ItemOptions && index < 3)
+        else if (CurrentMenu == Menu.ItemOptions && index < itemOptionsCount)
         {
             usageOptions.Active(index, action);
         }
