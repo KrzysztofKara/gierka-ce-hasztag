@@ -7,12 +7,6 @@ public class BattleHP : MonoBehaviour
     [SerializeField] private RectTransform _HPlvl; //poziom obecnego hp
     [SerializeField] private RectTransform _HPsize;//szerokoœæ ca³ego elementu
 
-    public void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space)){
-            UpdateHP(10,20);
-        }
-    }
 
     public void UpdateHP(int newHP, int baseHP)
     {
