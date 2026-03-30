@@ -11,10 +11,10 @@ public class Player : MonoBehaviour
     public int HP = 15;
     public int BaseDamage = 5;
 
-    public event Action<int> OnPlayerLvlChanged;
-    public event Action<int> OnPlayerGoldChanged;
-    public event Action<int> OnPlayerBaseHpChanged;
-    public event Action<int, int> OnPlayerHpChanged;
+    public static event Action<int> OnPlayerLvlChanged;
+    public static Action<int> OnPlayerGoldChanged;
+    public static Action<int> OnPlayerBaseHpChanged;
+    public static Action<int, int> OnPlayerHpChanged;
 
     private void Start()
     {

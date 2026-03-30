@@ -40,9 +40,9 @@ public class InventoryManagerUI : MonoBehaviour
 
     private void OnEnable()
     {
-        player.OnPlayerHpChanged += UpdateHP;
-        player.OnPlayerLvlChanged += UpdateLvl;
-        player.OnPlayerGoldChanged += UpdateGold;
+        Player.OnPlayerHpChanged += UpdateHP;
+        Player.OnPlayerLvlChanged += UpdateLvl;
+        Player.OnPlayerGoldChanged += UpdateGold;
 
         player.inventory.OnInventoryChanged += UpdateSlots;
         player.inventory.OnWeaponChanged += UpdateWeapon;
@@ -51,9 +51,9 @@ public class InventoryManagerUI : MonoBehaviour
 
     private void OnDisable()
     {
-        player.OnPlayerHpChanged -= UpdateHP;
-        player.OnPlayerLvlChanged -= UpdateLvl;
-        player.OnPlayerGoldChanged -= UpdateGold;
+        Player.OnPlayerHpChanged -= UpdateHP;
+        Player.OnPlayerLvlChanged -= UpdateLvl;
+        Player.OnPlayerGoldChanged -= UpdateGold;
 
         player.inventory.OnInventoryChanged -= UpdateSlots;
         player.inventory.OnWeaponChanged -= UpdateWeapon;
