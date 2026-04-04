@@ -10,7 +10,7 @@ public class BattleHP : MonoBehaviour
 
     public void UpdateHP(int newHP, int baseHP)
     {
-        _HP.text = $"{newHP} / {baseHP}";
+        _HP.text = $"{newHP}/{baseHP}";
 
         float Width = _HPsize.sizeDelta.x; //szerokoœæ panelu hp
         float NewWidth = Width * ((float)newHP / (float)baseHP ); //nowa szerokoœæ obliczona na podstawie procentu pozosta³ego hp

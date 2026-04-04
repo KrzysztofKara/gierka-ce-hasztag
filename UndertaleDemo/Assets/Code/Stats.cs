@@ -20,7 +20,7 @@ public class Stats : MonoBehaviour
 
     public void SetHp(int hp, int baseHp)
     {
-        _HP.text = hp.ToString() + " / " + baseHp.ToString();
+        _HP.text = hp.ToString() + "/" + baseHp.ToString();
     }
 
     public void SetGold(int gold)
