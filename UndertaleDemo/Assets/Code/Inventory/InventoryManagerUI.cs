@@ -16,10 +16,7 @@ public class InventoryManagerUI : MonoBehaviour
     [SerializeField] private GameObject _Stats;
     [SerializeField] private GameObject _Options;
 
-    [SerializeField] private InventorySlot _SlotPrefab; // Prefab do generowania slotów w inventory
-    [SerializeField] private Transform _SlotsParent; // Rodzic do którego bêd¹ do³¹czane prefaby slotów
-
-    private List<InventorySlot> _slots = new(); // Lista w której bêd¹ przechowywane referencje do slotów
+    [SerializeField] private InventorySlots _SlotsScript;
 
     [SerializeField] private QuickInfo quickStats; // Skrypt dla wyœwietlania szybkich statystyk (uzupe³nianie informacji)
     [SerializeField] private Stats stats; // Skrypt dla wyœwietlania statystyk (uzupe³nianie informacji)
@@ -108,8 +105,6 @@ public class InventoryManagerUI : MonoBehaviour
         //Cofanie po wciœniêciu Shift'a
         GetBackOrClose();
 
-
-
     }
 
 
@@ -160,59 +155,9 @@ public class InventoryManagerUI : MonoBehaviour
         stats.SetDefence(protection);
     }
 
-
-    //Aktualizowanie Wszystkich Slotów w Inventory UI
     private void UpdateSlots(int count)
     {
-        ClearSlots();
-
-        CreateSlots(count);
-
-        for (int i = 0; i < count; i++)
-        {
-            SetItemNameInSlot(i, player.inventory.Items[i].Name);
-        }
-    }
-
-    //Tworzy okreœlon¹ liczbê slotów w Inventory UI
-    private void CreateSlots(int amount)
-    {
-        for (int i = 0; i < amount; i++)
-        {
-            InventorySlot slot = Instantiate(_SlotPrefab, _SlotsParent, false);
-            slot.SetItemName("Empty");
-            _slots.Add(slot);
-        }
-    }
-
-    //Ustawia Nazwê itemu w Slocie
-    private void SetItemNameInSlot(int index, string itemName)
-    {
-        if (index < 0 || index >= _slots.Count)
-            return;
-
-        _slots[index].SetItemName(itemName);
-    }
-
-    //Usuwa slot o podanym id
-    private void RemoveSlot(int index)
-    {
-        if (index < 0 || index >= _slots.Count)
-            return;
-
-        Destroy(_slots[index].gameObject);
-        _slots.RemoveAt(index);
-    }
-
-    //Usuwa wszystkie sloty
-    public void ClearSlots()
-    {
-        foreach (InventorySlot slot in _slots)
-        {
-            Destroy(slot.gameObject);
-        }
-
-        _slots.Clear();
+        _SlotsScript.UpdateSlots(count);
     }
 
     //po wciœniêciu Shift'a patrzymy na to co jest otwarte i cofamy siê do poprzedniego elementu UI lub je zamykamy (ustawia te¿ CurrentMenu)
@@ -255,7 +200,6 @@ public class InventoryManagerUI : MonoBehaviour
                 CurrentMenu = Menu.Options;
                 SelectOption(0, true);
             }
-            
         }
     }
 
@@ -274,7 +218,7 @@ public class InventoryManagerUI : MonoBehaviour
                 CurrentMenu = Menu.Inventory;
 
                 //Jak nasze Inventory jest puste to nic nie wybieramy
-                if (_slots.Count == 0) { return; }
+                if (player.InventorySize() == 0) { return; }
                 ItemIndex = 0;
                 SelectOption(0, true);
             }
@@ -306,7 +250,7 @@ public class InventoryManagerUI : MonoBehaviour
                 CloseInventoryUI();
             }
             //Jak jesteœmy w Inventory to przechodzimy do Menu z opcjami itemu 
-            else if (CurrentMenu == Menu.Inventory && _slots.Count > 0)
+            else if (CurrentMenu == Menu.Inventory && player.InventorySize() > 0)
             {
                 SelectOption(ItemIndex, false);
                 CurrentMenu = Menu.ItemOptions;
@@ -338,8 +282,7 @@ public class InventoryManagerUI : MonoBehaviour
         {
             SelectOption(OptionIndex, false);
             OptionIndex = index;
-            SelectOption(index, true);
-            
+            SelectOption(index, true); 
         }
         //Kiedy jesteœmy w menu z opcjami itemów to -||-
         else if (CurrentMenu == Menu.ItemOptions && index < 3)
@@ -349,7 +292,7 @@ public class InventoryManagerUI : MonoBehaviour
             SelectOption(index, true);
         }
         //Kiedy jesteœmy w menu z itemami to zmnieniamy wybrany item
-        else if (CurrentMenu == Menu.Inventory && _slots.Count > index)
+        else if (CurrentMenu == Menu.Inventory && player.InventorySize() > index)
         {
             SelectOption(ItemIndex, false);
             ItemIndex = index;
@@ -372,13 +315,10 @@ public class InventoryManagerUI : MonoBehaviour
         }
         else if (CurrentMenu == Menu.Inventory)
         {
-            if (_slots.Count <= index) { return; }
+            if (player.InventorySize() <= index) { return; }
 
-            GameObject Heart = _SlotsParent.GetChild(index).gameObject.transform.GetChild(1).gameObject;
-
-            Heart.SetActive(action);
-        }
-        
+            _SlotsScript.Active(index, action);
+        } 
     }
 
     //Wy³¹cza ca³e Inventory UI i ustawia wszystkie zmienne do stanu pocz¹tkowego 
@@ -397,15 +337,10 @@ public class InventoryManagerUI : MonoBehaviour
         _QuickInfo.SetActive(false);
         _Stats.SetActive(false);
 
-        
+
         OptionIndex = 0;
         ItemIndex = -1;
         ItemOptionIndex = -1;
 
     }
-
-    
 }
-
-
-
