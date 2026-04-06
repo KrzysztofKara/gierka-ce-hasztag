@@ -4,18 +4,11 @@ using UnityEngine;
 
 public class StateManager : MonoBehaviour
 {
-    public static StateManager instance;
-
-    private GameState CurrentGameState;
+    public static GameState CurrentGameState;
 
     private void Start()
     {
-        instance = this;
-    }
-
-    public void SetCurrentState(GameState gameState)
-    {
-        CurrentGameState = gameState;
+        CurrentGameState = GameState.Gameplay;
     }
 }
 
@@ -26,5 +19,6 @@ public enum GameState
     BattleMenu,
     GameplayDialogue,
     BattleDialogue,
+    Fight,
     CutScene
 }

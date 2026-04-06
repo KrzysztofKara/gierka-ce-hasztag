@@ -1,12 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
-enum Menu
-{
-    Options,
-    Inventory,
-    ItemOptions,
-    Stats
-}
+
 
 public class InventoryManagerUI : MonoBehaviour
 {
@@ -37,6 +31,13 @@ public class InventoryManagerUI : MonoBehaviour
     const int optionsCount = 2;
     const int itemOptionsCount = 3;
 
+    enum Menu
+    {
+        Options,
+        Inventory,
+        ItemOptions,
+        Stats
+    }
 
     private void OnEnable()
     {
@@ -93,7 +94,7 @@ public class InventoryManagerUI : MonoBehaviour
         
 
         //Jeœli nie mamy w³¹czonego UI to nie mo¿emy siê po nim poruszaæ
-        if (!_Options.activeSelf)
+        if (StateManager.CurrentGameState != GameState.MainMenu)
         {
             return;
         }
@@ -120,6 +121,10 @@ public class InventoryManagerUI : MonoBehaviour
         {
             _Options.SetActive(!_Options.activeSelf);
             _QuickInfo.SetActive(!_QuickInfo.activeSelf);
+
+            //zmiana stanu gry (jak otwiarte menu to jesteœmy w menu a jak nie to jest gameplay normalnie)
+            if (_Options.activeSelf) StateManager.CurrentGameState =  GameState.MainMenu;
+            else StateManager.CurrentGameState =  GameState.Gameplay;
 
             SelectOption(OptionIndex, true);
 
@@ -225,6 +230,7 @@ public class InventoryManagerUI : MonoBehaviour
             {
                 _Options.SetActive(false);
                 _QuickInfo.SetActive(false);
+                StateManager.CurrentGameState = GameState.Gameplay;
             }
             //Jesteœmy w Statystykach
             else if (CurrentMenu == Menu.Stats)
@@ -384,6 +390,7 @@ public class InventoryManagerUI : MonoBehaviour
     //Wy³¹cza ca³e Inventory UI i ustawia wszystkie zmienne do stanu pocz¹tkowego 
     public void CloseInventoryUI()
     {
+        StateManager.CurrentGameState = GameState.Gameplay;
         CurrentMenu = Menu.ItemOptions;
         SelectOption(ItemOptionIndex, false);
         CurrentMenu = Menu.Inventory;
