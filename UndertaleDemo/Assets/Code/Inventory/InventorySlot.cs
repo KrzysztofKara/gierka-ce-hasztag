@@ -9,4 +9,9 @@ public class InventorySlot : MonoBehaviour
     {
         _itemNameText.text = itemName;
     }
+
+    public void Active(bool action)
+    {
+        gameObject.transform.GetChild(1).gameObject.SetActive(action);
+    }
 }
