@@ -59,4 +59,9 @@ public class Player : MonoBehaviour
         }
         OnPlayerHpChanged(HP, BaseHP);
     }
+
+    public int InventorySize()
+    {
+        return inventory.Items.Count;
+    }
 }
