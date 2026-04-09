@@ -1,6 +1,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+enum Menu
+{
+    Options,
+    Inventory,
+    ItemOptions,
+    Stats,
+    DialogueOptions,
+    MercyOptions,
+    Fight
+}
 
 public class InventoryManagerUI : MonoBehaviour
 {
@@ -27,14 +37,6 @@ public class InventoryManagerUI : MonoBehaviour
     // --- Sta³e ---
     const int optionsCount = 2;
     const int itemOptionsCount = 3;
-
-    enum Menu
-    {
-        Options,
-        Inventory,
-        ItemOptions,
-        Stats
-    }
 
     private void OnEnable()
     {
@@ -165,7 +167,9 @@ public class InventoryManagerUI : MonoBehaviour
         _SlotsScript.UpdateSlots(count);
     }
 
-    //po wciœniêciu Shift'a patrzymy na to co jest otwarte i cofamy siê do poprzedniego elementu UI lub je zamykamy (ustawia te¿ CurrentMenu)
+    /// <summary>
+    /// po wciœniêciu Shift'a patrzymy na to co jest otwarte i cofamy siê do poprzedniego elementu UI lub je zamykamy (ustawia te¿ CurrentMenu)
+    /// </summary>
     private void GetBackOrClose()
     {
         if (Input.GetKeyDown(KeyCode.RightShift))

@@ -10,7 +10,7 @@ public class BattleOption : MonoBehaviour
 
     [SerializeField] private Image Sprite;
 
-    public void Select(bool action)
+    public void Active(bool action)
     {
         if (action) Sprite.sprite = ActiveSprite;
         else        Sprite.sprite = UnactiveSprite;
