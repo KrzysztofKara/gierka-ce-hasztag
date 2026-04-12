@@ -9,9 +9,6 @@ public class BattleOption : MonoBehaviour
     [SerializeField] private Sprite UnactiveSprite;
     [SerializeField] private GameObject Heart;
 
-    [SerializeField] private bool isAct;
-    [SerializeField] private InkControll inkController;
-
     [SerializeField] private Image Sprite;
 
     void Start()
@@ -25,15 +22,5 @@ public class BattleOption : MonoBehaviour
         else Sprite.sprite = UnactiveSprite;
 
         Heart.SetActive(action);
-    }
-
-    public void OnSelect()
-    {
-        Debug.Log("ON SELECT: " + gameObject.name);
-
-        if (isAct)
-        {
-            inkController.StartActDialogue();
-        }
     }
 }

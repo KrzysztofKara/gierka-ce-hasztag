@@ -11,37 +11,49 @@ public class InkControll : MonoBehaviour
 
     private Story story;
 
-    void Start()
-    {
-        story = new Story(inkJSON.text);
-    }
+    private bool dialogueActive = false;
 
-    public void StartActDialogue()
+    public void StartDialogue()
     {
-        Debug.Log("ACT START");
+        Debug.Log("INK START");
+        dialogueText.gameObject.SetActive(true);
 
         if (inkJSON == null)
         {
-            Debug.Log("NO INK JSON");
+            Debug.LogError("Brak inkJSON!");
             return;
         }
 
         story = new Story(inkJSON.text);
 
+        dialogueActive = true;
+
         dialogueText.gameObject.SetActive(true);
 
-        string text = story.Continue();
-        Debug.Log("INK OUTPUT: " + text);
-
-        dialogueText.text = text;
+        ShowNextLine();
     }
 
-    private void RefreshDialogue()
+    public void ShowNextLine()
     {
+        if (!dialogueActive) return;
+
         if (story.canContinue)
         {
-            dialogueText.text = story.Continue();
+            string text = story.Continue();
+            Debug.Log("INK: " + text);
+            dialogueText.text = text;
         }
+        else
+        {
+            Debug.Log("KONIEC DIALOGU");
+            dialogueActive = false;
+            dialogueText.gameObject.SetActive(false);
+        }
+    }
+
+    public bool IsDialogueActive()
+    {
+        return dialogueActive;
     }
 }
 

@@ -1,8 +1,8 @@
+VAR started = true
+
+-> start
+
 === start ===
-
-Przeciwnik patrzy na ciebie.
-
+HELLO FROM INK
 -> END
-
-
 

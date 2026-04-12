@@ -36,6 +36,7 @@ public class BattleUIManager : MonoBehaviour
 
     [SerializeField] private int SelectedItem;
     [SerializeField] private Menu CurrentMenu = Menu.Options;
+    [SerializeField] private InkControll inkController;
 
     // --- Sta³e ---
     const int OptionsCount = 4;
@@ -147,7 +148,7 @@ public class BattleUIManager : MonoBehaviour
                     _DialogueScene.SetActive(true);
                     CurrentMenu = Menu.DialogueOptions;
 
-                    //Kod do Dialogów
+                    inkController.StartDialogue();
 
                     break;
                 case 2:
