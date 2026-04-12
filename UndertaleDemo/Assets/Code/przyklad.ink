@@ -1,8 +1,24 @@
-VAR started = true
+=== act ===
+To jest ACT
+-> next1
 
--> start
+=== next1 ===
+Patrzysz na ACT
+-> next2
 
-=== start ===
-HELLO FROM INK
+=== next2 ===
+dalej act
 -> END
 
+
+=== mercy ===
+To jest MERCY
+-> m1
+
+=== m1 ===
+Patrzysz na MERCY
+-> m2
+
+=== m2 ===
+dalej mercy
+-> END

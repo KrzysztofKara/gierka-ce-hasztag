@@ -70,9 +70,16 @@ public class BattleUIManager : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.RightArrow)) { ChooseOptionOrItem(Direction.Right); }//Strza³ka w prawo
 
 
-        if (Input.GetKeyDown(KeyCode.Return))//Enter
+        if (Input.GetKeyDown(KeyCode.Return))
         {
-            ProgressUI();
+            if (inkController.IsDialogueActive())
+            {
+                inkController.ShowNextLine(); 
+            }
+            else
+            {
+                ProgressUI(); 
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.RightShift))//Shift
@@ -148,7 +155,8 @@ public class BattleUIManager : MonoBehaviour
                     _DialogueScene.SetActive(true);
                     CurrentMenu = Menu.DialogueOptions;
 
-                    inkController.StartDialogue();
+                    //kod dialogow act
+                    inkController.StartDialogue("act");
 
                     break;
                 case 2:
@@ -161,6 +169,7 @@ public class BattleUIManager : MonoBehaviour
                     CurrentMenu = Menu.MercyOptions;
 
                     //Kod do Dialogów Mercy
+                    inkController.StartDialogue("mercy");
 
                     break;
             }

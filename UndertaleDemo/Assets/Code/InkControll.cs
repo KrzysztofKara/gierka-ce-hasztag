@@ -13,10 +13,9 @@ public class InkControll : MonoBehaviour
 
     private bool dialogueActive = false;
 
-    public void StartDialogue()
+    public void StartDialogue(string knotName)
     {
-        Debug.Log("INK START");
-        dialogueText.gameObject.SetActive(true);
+        Debug.Log("INK START: " + knotName);
 
         if (inkJSON == null)
         {
@@ -26,8 +25,9 @@ public class InkControll : MonoBehaviour
 
         story = new Story(inkJSON.text);
 
-        dialogueActive = true;
+        story.ChoosePathString(knotName); 
 
+        dialogueActive = true;
         dialogueText.gameObject.SetActive(true);
 
         ShowNextLine();
