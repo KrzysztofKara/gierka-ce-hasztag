@@ -25,8 +25,8 @@ public class BattleUIManager : MonoBehaviour
     [SerializeField] private GameObject _AttackScene;
     [SerializeField] private GameObject _DialogueScene;
     [SerializeField] private GameObject _Inventory;
-    [SerializeField] private GameObject _ItemDescription;
 
+    [SerializeField] private ItemDescription itemDescription;
     [SerializeField] private BattleHP battleHP;
     [SerializeField] private BattleOptions battleOptions;
     [SerializeField] private InventorySlots inventorySlots;
@@ -167,9 +167,11 @@ public class BattleUIManager : MonoBehaviour
         else if (CurrentMenu == Menu.Inventory)
         {
             SelectedItem = inventorySlots.Select();
-            _ItemDescription.SetActive(true);
+            itemDescription.gameObject.SetActive(true);
             usageOptions.Activate(0);
             CurrentMenu = Menu.ItemOptions;
+            itemDescription.SetDescription(player.inventory.Items[SelectedItem].Description); //ustawianie opisu itemu
+            
         }
         else if (CurrentMenu == Menu.ItemOptions)
         {
@@ -178,7 +180,7 @@ public class BattleUIManager : MonoBehaviour
                 case 0:
                     player.UseItem(SelectedItem);
                     usageOptions.Off();
-                    _ItemDescription.SetActive(false);
+                    itemDescription.gameObject.SetActive(false);
 
                     //Kod do progresowania Walki (zmieniæ)
                     GetBack();
@@ -199,7 +201,7 @@ public class BattleUIManager : MonoBehaviour
     {
         if (CurrentMenu == Menu.ItemOptions)
         {
-            _ItemDescription.SetActive(false);//Wy³¹czanie okna z opisem Itemu
+            itemDescription.gameObject.SetActive(false);//Wy³¹czanie okna z opisem Itemu
             usageOptions.Off();//Wy³¹czanie serca
             CurrentMenu = Menu.Inventory;//Ustawiamy obecne Menu
             inventorySlots.Activate(SelectedItem);//Zaznaczamy item o którym 

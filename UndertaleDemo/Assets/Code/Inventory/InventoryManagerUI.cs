@@ -6,6 +6,7 @@ enum Menu
     Options,
     Inventory,
     ItemOptions,
+    ItemDescriprion,
     Stats,
     DialogueOptions,
     MercyOptions,
@@ -25,6 +26,7 @@ public class InventoryManagerUI : MonoBehaviour
     [SerializeField] private QuickInfo quickStats; // Skrypt dla wyœwietlania szybkich statystyk (uzupe³nianie informacji)
     [SerializeField] private Stats stats; // Skrypt dla wyœwietlania statystyk (uzupe³nianie informacji)
     [SerializeField] private UsageOptions usageOptions; // Skrypt dla aktywowania serca w opcjach u¿ycia itemów
+    [SerializeField] private ItemDescription itemDescription; //Skrypt do opisu dla itemów
     [SerializeField] private Options options; // Skrypt dla aktywowania serca w opcjach
     [SerializeField] private Player player; // Skrypt gracza (statystyki, inventory)
 
@@ -210,6 +212,12 @@ public class InventoryManagerUI : MonoBehaviour
                 CurrentMenu = Menu.Options;
                 SelectOption(0, true);
             }
+            else if (CurrentMenu == Menu.ItemDescriprion)
+            {
+                itemDescription.gameObject.SetActive(false);
+                CurrentMenu = Menu.ItemOptions;
+                SelectOption(ItemOptionIndex, true);
+            }
         }
     }
 
@@ -240,22 +248,31 @@ public class InventoryManagerUI : MonoBehaviour
 
                 CurrentMenu = Menu.Stats;
             }
+            //Wychodzenie z Opisu itemu
+            else if (CurrentMenu == Menu.ItemDescriprion)
+            {
+                itemDescription.gameObject.SetActive(false);
+                CurrentMenu = Menu.ItemOptions;
+                SelectOption(ItemOptionIndex, true);
+            }
             //U¿ycie itemu
             else if (ItemOptionIndex == 0)
             {
-                Debug.Log("U¿ycie itemu");
                 player.UseItem(ItemIndex);
                 CloseInventoryUI();
             }
+            //Info o itemie
             else if (ItemOptionIndex == 1)
             {
-                Debug.Log("Informacje o itemie");
-                
-                CloseInventoryUI();
+                itemDescription.gameObject.SetActive(true);
+                CurrentMenu = Menu.ItemDescriprion;
+                SelectOption(ItemOptionIndex, false);
+
+                itemDescription.SetDescription(player.inventory.Items[ItemIndex].Description);
             }
+            //Wyrzucenie itemu
             else if (ItemOptionIndex == 2) 
-            { 
-                Debug.Log("Wyrzucenie itemu");
+            {
                 player.inventory.RemoveItem(index:ItemIndex);
                 CloseInventoryUI();
             }

@@ -18,17 +18,20 @@ public class AttackSelector : MonoBehaviour
         {
             SelectorRigbody.velocity = Vector2.left * Speed;
         }
-
     }
 
     private void Update()
     {
         if (SelectorRigbody != null)
         {
-            if (SelectorRect.localPosition.x < -StartPosition)
+            if (SelectorRect.localPosition.x < -StartPosition) //Jak gracz nic nie zaznaczy
             {
                 Select();
             }
+        }
+        else if (Input.GetKeyDown(KeyCode.Return)) //Na Enter aktywujemy Slider
+        {
+            Select();
         }
     }
 
@@ -54,7 +57,8 @@ public class AttackSelector : MonoBehaviour
     /// </summary>
     public void Select()
     {
-        onSliderSelected?.Invoke(Math.Abs(SelectorRect.localPosition.x) / StartPosition);
+        float precent = Math.Abs(SelectorRect.localPosition.x) / StartPosition; //procentowa odleg³oœæ wzglêdem œrodka
+        onSliderSelected?.Invoke(precent);
         SetOff();
     }
 }
