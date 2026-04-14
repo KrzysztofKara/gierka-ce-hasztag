@@ -28,3 +28,15 @@ public enum GameState
     Fight,
     CutScene
 }
+
+public enum ActionPanelSize
+{
+    Square,
+    Max,
+}
+
+public enum AnimationAxis
+{
+    Horizontal,
+    Vertical,
+}
