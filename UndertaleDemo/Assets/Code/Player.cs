@@ -16,6 +16,7 @@ public class Player : MonoBehaviour
     public static Action<int> OnPlayerBaseHpChanged;
     public static Action<int, int> OnPlayerHpChanged;
 
+
     private void Start()
     {
         OnPlayerLvlChanged?.Invoke(LVL);

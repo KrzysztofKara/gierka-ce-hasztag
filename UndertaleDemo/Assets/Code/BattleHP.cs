@@ -4,18 +4,20 @@ using UnityEngine;
 public class BattleHP : MonoBehaviour
 {
     [SerializeField] private TMP_Text _HP;
-    [SerializeField] private RectTransform _HPlvl; //poziom obecnego hp
-    [SerializeField] private RectTransform _HPsize;//szeroko쒏 ca쿮go elementu
+    [SerializeField] private RectTransform _HPLvl; //poziom obecnego hp
+    [SerializeField] private RectTransform _HPSize;//szeroko쒏 ca쿮go elementu
 
+    [SerializeField] private int DefaultHPLvl;
 
     public void UpdateHP(int newHP, int baseHP)
     {
         _HP.text = $"{newHP}/{baseHP}";
 
-        float Width = _HPsize.sizeDelta.x; //szeroko쒏 panelu hp
-        float NewWidth = Width * ((float)newHP / (float)baseHP ); //nowa szeroko쒏 obliczona na podstawie procentu pozosta쿮go hp
+        float NewWidh = 100 * (float)baseHP / DefaultHPLvl; //ustawiamy szeroko쒏 pola hp
+        float NewLVL = NewWidh * ((float)newHP / (float)baseHP ); //nowa szeroko쒏 obliczona na podstawie procentu pozosta쿮go hp
 
-        _HPlvl.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, NewWidth);
+        _HPLvl.offsetMax = new Vector2(- NewWidh + NewLVL, 0);
+        _HPSize.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, NewWidh);
 
     }
 }

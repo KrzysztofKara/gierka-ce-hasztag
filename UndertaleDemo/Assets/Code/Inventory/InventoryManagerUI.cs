@@ -1,12 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-enum Menu
-{
-    Options,
-    Inventory,
-    ItemOptions,
-    Stats
-}
 
 public class InventoryManagerUI : MonoBehaviour
 {
@@ -21,6 +14,7 @@ public class InventoryManagerUI : MonoBehaviour
     [SerializeField] private QuickInfo quickStats; // Skrypt dla wyœwietlania szybkich statystyk (uzupe³nianie informacji)
     [SerializeField] private Stats stats; // Skrypt dla wyœwietlania statystyk (uzupe³nianie informacji)
     [SerializeField] private UsageOptions usageOptions; // Skrypt dla aktywowania serca w opcjach u¿ycia itemów
+    [SerializeField] private ItemDescription itemDescription; //Skrypt do opisu dla itemów
     [SerializeField] private Options options; // Skrypt dla aktywowania serca w opcjach
     [SerializeField] private Player player; // Skrypt gracza (statystyki, inventory)
 
@@ -33,7 +27,6 @@ public class InventoryManagerUI : MonoBehaviour
     // --- Sta³e ---
     const int optionsCount = 2;
     const int itemOptionsCount = 3;
-
 
     private void OnEnable()
     {
@@ -90,7 +83,7 @@ public class InventoryManagerUI : MonoBehaviour
         
 
         //Jeœli nie mamy w³¹czonego UI to nie mo¿emy siê po nim poruszaæ
-        if (!_Options.activeSelf)
+        if (StateManager.CurrentGameState != GameState.MainMenu)
         {
             return;
         }
@@ -115,6 +108,10 @@ public class InventoryManagerUI : MonoBehaviour
         {
             _Options.SetActive(!_Options.activeSelf);
             _QuickInfo.SetActive(!_QuickInfo.activeSelf);
+
+            //zmiana stanu gry (jak otwiarte menu to jesteœmy w menu a jak nie to jest gameplay normalnie)
+            if (_Options.activeSelf) StateManager.CurrentGameState =  GameState.MainMenu;
+            else StateManager.CurrentGameState =  GameState.Gameplay;
 
             SelectOption(OptionIndex, true);
 
@@ -160,7 +157,9 @@ public class InventoryManagerUI : MonoBehaviour
         _SlotsScript.UpdateSlots(count);
     }
 
-    //po wciœniêciu Shift'a patrzymy na to co jest otwarte i cofamy siê do poprzedniego elementu UI lub je zamykamy (ustawia te¿ CurrentMenu)
+    /// <summary>
+    /// po wciœniêciu Shift'a patrzymy na to co jest otwarte i cofamy siê do poprzedniego elementu UI lub je zamykamy (ustawia te¿ CurrentMenu)
+    /// </summary>
     private void GetBackOrClose()
     {
         if (Input.GetKeyDown(KeyCode.RightShift))
@@ -170,6 +169,7 @@ public class InventoryManagerUI : MonoBehaviour
             {
                 _Options.SetActive(false);
                 _QuickInfo.SetActive(false);
+                StateManager.CurrentGameState = GameState.Gameplay;
             }
             //Jesteœmy w Statystykach
             else if (CurrentMenu == Menu.Stats)
@@ -199,6 +199,12 @@ public class InventoryManagerUI : MonoBehaviour
                 ItemIndex = -1;
                 CurrentMenu = Menu.Options;
                 SelectOption(0, true);
+            }
+            else if (CurrentMenu == Menu.ItemDescriprion)
+            {
+                itemDescription.gameObject.SetActive(false);
+                CurrentMenu = Menu.ItemOptions;
+                SelectOption(ItemOptionIndex, true);
             }
         }
     }
@@ -230,22 +236,31 @@ public class InventoryManagerUI : MonoBehaviour
 
                 CurrentMenu = Menu.Stats;
             }
+            //Wychodzenie z Opisu itemu
+            else if (CurrentMenu == Menu.ItemDescriprion)
+            {
+                itemDescription.gameObject.SetActive(false);
+                CurrentMenu = Menu.ItemOptions;
+                SelectOption(ItemOptionIndex, true);
+            }
             //U¿ycie itemu
             else if (ItemOptionIndex == 0)
             {
-                Debug.Log("U¿ycie itemu");
                 player.UseItem(ItemIndex);
                 CloseInventoryUI();
             }
+            //Info o itemie
             else if (ItemOptionIndex == 1)
             {
-                Debug.Log("Informacje o itemie");
-                
-                CloseInventoryUI();
+                itemDescription.gameObject.SetActive(true);
+                CurrentMenu = Menu.ItemDescriprion;
+                SelectOption(ItemOptionIndex, false);
+
+                itemDescription.SetDescription(player.inventory.Items[ItemIndex].Description);
             }
+            //Wyrzucenie itemu
             else if (ItemOptionIndex == 2) 
-            { 
-                Debug.Log("Wyrzucenie itemu");
+            {
                 player.inventory.RemoveItem(index:ItemIndex);
                 CloseInventoryUI();
             }
@@ -324,6 +339,7 @@ public class InventoryManagerUI : MonoBehaviour
     //Wy³¹cza ca³e Inventory UI i ustawia wszystkie zmienne do stanu pocz¹tkowego 
     public void CloseInventoryUI()
     {
+        StateManager.CurrentGameState = GameState.Gameplay;
         CurrentMenu = Menu.ItemOptions;
         SelectOption(ItemOptionIndex, false);
         CurrentMenu = Menu.Inventory;

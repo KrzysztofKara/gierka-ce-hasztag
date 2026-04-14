@@ -1,21 +1,23 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.ShaderGraph.Drawing;
 using UnityEngine;
 
-public class UsageOptions : MonoBehaviour
+public class BattleOptions : MonoBehaviour
 {
     [SerializeField] int CurrIndex;
 
-    [SerializeField] private List<GameObject> Hearts;
-
+    [SerializeField] List<BattleOption> Options;
+    
     /// <summary>
     /// Wy³¹cza wszystkie opcje
     /// </summary>
     public void Off()
     {
-        for (int i = 0; i < Hearts.Count; i++)
+        for (int i = 0; i < Options.Count; i++)
         {
-            Hearts[i].SetActive(false);
+            Options[i].Active(false);
         }
         CurrIndex = 0;
     }
@@ -41,9 +43,9 @@ public class UsageOptions : MonoBehaviour
     /// <returns>Index Opcji któr¹ zaznaczono (-1 jeœli nie by³a ¿adna zaznaczona)</returns>
     public int Select()
     {
-        if (CurrIndex > -1 && CurrIndex < Hearts.Count)
+        if (CurrIndex > -1 && CurrIndex < Options.Count)
         {
-            Hearts[CurrIndex].SetActive(false);
+            Options [CurrIndex].Active(false);
             return CurrIndex;
         }
         return -1;
@@ -55,28 +57,16 @@ public class UsageOptions : MonoBehaviour
     /// <returns>Informacjê czy uda³o siê wykonaæ akcjê</returns>
     public bool Activate(int index)
     {
-        if (index > -1 && index < Hearts.Count)
+        if (index > -1 && index < Options.Count)
         {
-            Hearts[CurrIndex].SetActive(false);
-            Hearts[index].SetActive(true);
+            Options[CurrIndex].Active(false);
+            Options[index].Active(true);
             CurrIndex = index;
             return true;
         }
         else
         {
             return false;
-        }
-    }
-
-
-    /// <summary>
-    /// Aktywuje/Deaktywuje Serce elementu o podamnym id (Starszy system u¿ywany w Menu g³ównym)
-    /// </summary>
-    public void Active(int index, bool action)
-    {
-        if (index > -1 && index < Hearts.Count)
-        {
-            Hearts[index].SetActive(action);
         }
     }
 }
