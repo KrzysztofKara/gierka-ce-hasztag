@@ -21,10 +21,12 @@ public class NPC : MonoBehaviour
     public void TakeDamage(int dmg)
     {
         currentHP -= dmg;
+        Debug.Log("chlop");
         if (currentHP <= 0)
         {
             currentHP = 0;
             Debug.Log(npcName + " ded³");
+            OnNPCDeath?.Invoke(this);
             gameObject.SetActive(false);//Jak zginie to znika z œwiata
         }
     }

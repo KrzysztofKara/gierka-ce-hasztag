@@ -10,7 +10,7 @@ public class AttackSelector : MonoBehaviour
     [SerializeField] float Speed;
     [SerializeField] float StartPosition;
 
-    public static event Action<float> onSliderSelected;
+    public static event Action<float> OnSliderSelected;
 
     private void OnEnable()
     {
@@ -21,13 +21,11 @@ public class AttackSelector : MonoBehaviour
     }
 
     private void Update()
-    {
-        if (SelectorRigbody != null)
+    { 
+
+        if (SelectorRect.localPosition.x < -StartPosition) //Jak gracz nic nie zaznaczy
         {
-            if (SelectorRect.localPosition.x < -StartPosition) //Jak gracz nic nie zaznaczy
-            {
-                Select();
-            }
+            Select();
         }
         else if (Input.GetKeyDown(KeyCode.Return)) //Na Enter aktywujemy Slider
         {
@@ -48,7 +46,7 @@ public class AttackSelector : MonoBehaviour
         if (SelectorRigbody != null)
         {
             SelectorRect.SetLocalPositionAndRotation(new Vector3(StartPosition, -150, 0), Quaternion.identity);
-            SelectorRigbody.velocity = Vector2.zero;            
+            SelectorRigbody.velocity = Vector2.zero;    
         }
     }
 
@@ -58,7 +56,7 @@ public class AttackSelector : MonoBehaviour
     public void Select()
     {
         float precent = Math.Abs(SelectorRect.localPosition.x) / StartPosition; //procentowa odleg³oœæ wzglêdem œrodka
-        onSliderSelected?.Invoke(precent);
+        OnSliderSelected?.Invoke(precent);
         SetOff();
     }
 }

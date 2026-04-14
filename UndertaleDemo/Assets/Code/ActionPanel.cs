@@ -31,7 +31,7 @@ public class ActionPanel : MonoBehaviour
             }
             else if (type == ActionPanelSize.Square)
             {
-                StartCoroutine(AnimateSize(AnimationAxis.Horizontal, AnimationSpeed, SquareWidth, DefaultHeight));
+                StartCoroutine(AnimateSize(AnimationAxis.Horizontal, AnimationSpeed, SquareWidth, SquareWidth));
             }
         }
         else

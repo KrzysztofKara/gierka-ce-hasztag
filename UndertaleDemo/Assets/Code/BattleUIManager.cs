@@ -34,10 +34,6 @@ public class BattleUIManager : MonoBehaviour
     const int OptionsCount = 4;
     const int itemOptionsCount = 2;
 
-    private void Start()
-    {
-        battleOptions.Activate(0);
-    }
 
     private void OnEnable()
     {
@@ -72,29 +68,34 @@ public class BattleUIManager : MonoBehaviour
             GetBack();
         }
     }
-    
 
 
 
-    private void UpdateHP(int baseHP, int newHP)
+
+
+    public void StartBattle()
     {
-        battleHP.UpdateHP(baseHP, newHP);
+        _BattleUI.SetActive(true);
+        battleOptions.Activate(0);
+        ResetOptions();
     }
 
-    private void UpdateNPCSprite(Image sprite)
+    public void EndBattle()
     {
-        battleNPC.SetNPCsprite(sprite);
+        _BattleUI.SetActive(false);
+        ResetOptions();
     }
 
-    private void UpdateNPCBackground(Image sprite)
+    public void ResetOptions()
     {
-        battleNPC.SetNPCBackground(sprite);
+        _Inventory.SetActive(false);
+        _FightScene.SetActive(false);
+        _AttackScene.SetActive(false);
+        CurrentMenu = Menu.Options;
+        battleOptions.Activate(0);
+
     }
 
-    private void UpdateSlots(int count)
-    {
-        inventorySlots.UpdateSlots(count);
-    }
 
     /// <summary>
     /// W zale¿noœci od kierunku zacznacza odpowiedni¹ opcjê/item
@@ -125,13 +126,16 @@ public class BattleUIManager : MonoBehaviour
     /// </summary>
     private void ProgressUI()
     {
+        //Jeœli nie jesteœmy w Menu to przerywamy dzia³anie
+        if (StateManager.CurrentGameState != GameState.BattleMenu) { return; }
+
         if (CurrentMenu == Menu.Options)
         {
             switch (battleOptions.Select())
             {
                 case 0:
                     _AttackScene.SetActive(true);
-                    CurrentMenu = Menu.Fight;
+                    CurrentMenu = Menu.Attack;
                     
                     //Kod do progresowania Walki
 
@@ -192,6 +196,9 @@ public class BattleUIManager : MonoBehaviour
     /// </summary>
     private void GetBack()
     {
+        //Jeœli nie jesteœmy w Menu to przerywamy dzia³anie
+        if (StateManager.CurrentGameState != GameState.BattleMenu) { return; }
+
         if (CurrentMenu == Menu.ItemOptions)
         {
             itemDescription.gameObject.SetActive(false);//Wy³¹czanie okna z opisem Itemu
@@ -199,7 +206,6 @@ public class BattleUIManager : MonoBehaviour
             CurrentMenu = Menu.Inventory;//Ustawiamy obecne Menu
             inventorySlots.Activate(SelectedItem);//Zaznaczamy item o którym 
         }
-
         else if (CurrentMenu == Menu.Inventory)
         {
             _Inventory.SetActive(false);
@@ -207,5 +213,43 @@ public class BattleUIManager : MonoBehaviour
             CurrentMenu = Menu.Options;
             battleOptions.Activate(2);
         }
+    }
+
+    public void StartFight()
+    {
+        _AttackScene.SetActive(false);
+
+        _FightScene.SetActive(true);
+
+        actionPanel.SetSize(type: ActionPanelSize.Square);
+    }
+
+    public void EndFight()
+    {
+        _AttackScene.SetActive(false);
+    }
+
+
+
+    public void SetNPCSprite(Sprite sprite)
+    {
+        battleNPC.SetNPCsprite(sprite);
+    }
+
+    public void SetNPCBackground(Sprite sprite)
+    {
+        battleNPC.SetNPCBackground(sprite);
+    }
+
+
+
+    private void UpdateHP(int baseHP, int newHP)
+    {
+        battleHP.UpdateHP(baseHP, newHP);
+    }
+
+    private void UpdateSlots(int count)
+    {
+        inventorySlots.UpdateSlots(count);
     }
 }
