@@ -13,19 +13,15 @@ public class InkControll : MonoBehaviour
 
     private bool dialogueActive = false;
 
-    public void StartDialogue(string knotName)
+    public void StartDialogue(string npcID, string action)
     {
-        Debug.Log("INK START: " + knotName);
-
-        if (inkJSON == null)
-        {
-            Debug.LogError("Brak inkJSON!");
-            return;
-        }
-
         story = new Story(inkJSON.text);
 
-        story.ChoosePathString(knotName); 
+        string path = npcID + "_" + action;
+
+        Debug.Log("PATH: " + path);
+
+        story.ChoosePathString(path);
 
         dialogueActive = true;
         dialogueText.gameObject.SetActive(true);

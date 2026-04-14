@@ -156,7 +156,7 @@ public class BattleUIManager : MonoBehaviour
                     CurrentMenu = Menu.DialogueOptions;
 
                     //kod dialogow act
-                    inkController.StartDialogue("act");
+                    inkController.StartDialogue(battleNPC.npcID, "act");
 
                     break;
                 case 2:
@@ -169,7 +169,7 @@ public class BattleUIManager : MonoBehaviour
                     CurrentMenu = Menu.MercyOptions;
 
                     //Kod do Dialogów Mercy
-                    inkController.StartDialogue("mercy");
+                    inkController.StartDialogue(battleNPC.npcID, "mercy");
 
                     break;
             }
