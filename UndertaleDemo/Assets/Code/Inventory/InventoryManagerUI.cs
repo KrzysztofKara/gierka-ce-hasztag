@@ -1,18 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-enum Menu
-{
-    Options,
-    Inventory,
-    ItemOptions,
-    ItemDescriprion,
-    Stats,
-    DialogueOptions,
-    MercyOptions,
-    Fight
-}
-
 public class InventoryManagerUI : MonoBehaviour
 {
     //Obiekty w UI podczas chodzenia po mapie

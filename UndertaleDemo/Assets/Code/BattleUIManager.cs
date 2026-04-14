@@ -3,13 +3,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.OSX;
 using UnityEngine.UI;
-public enum Direction
-{
-    Up,
-    Down,
-    Right,
-    Left
-}
 
 public class BattleUIManager : MonoBehaviour
 {

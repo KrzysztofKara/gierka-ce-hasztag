@@ -12,13 +12,3 @@ public class StateManager : MonoBehaviour
     }
 }
 
-public enum GameState
-{
-    Gameplay,
-    MainMenu,
-    BattleMenu,
-    GameplayDialogue,
-    BattleDialogue,
-    Fight,
-    CutScene
-}
