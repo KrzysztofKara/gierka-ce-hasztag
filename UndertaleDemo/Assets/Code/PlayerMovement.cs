@@ -7,8 +7,10 @@ public class PlayerMovement : MonoBehaviour
 {
 
     [SerializeField] private float movementSpeed = 1.5f;
+    [SerializeField] private bool isFightHeart;
     private Rigidbody2D myRigidbody;
     private Vector2 moveInput;
+
 
     // Start is called before the first frame update
     void Start()
@@ -19,6 +21,8 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (StateManager.CurrentGameState != GameState.Gameplay && !isFightHeart) return;
+        if (StateManager.CurrentGameState != GameState.Fight && isFightHeart) return;
         myRigidbody.velocity = moveInput * movementSpeed;
     }
 

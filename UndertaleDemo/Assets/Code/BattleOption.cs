@@ -5,20 +5,16 @@ using System;
 public class BattleOption : MonoBehaviour
 {
     [SerializeField] private Sprite ActiveSprite;
-    [SerializeField] private Sprite UnActiveSprite;
+    [SerializeField] private Sprite UnactiveSprite;
     [SerializeField] private GameObject Heart;
 
     [SerializeField] private Image Sprite;
 
-    public void Activate()
+    public void Active(bool action)
     {
-        Sprite.sprite = ActiveSprite;
-        Heart.SetActive(true);
-    }
-
-    public void DeActivate()
-    {
-        Sprite.sprite = UnActiveSprite;
-        Heart.SetActive(false);
+        if (action) Sprite.sprite = ActiveSprite;
+        else        Sprite.sprite = UnactiveSprite;
+        
+        Heart.SetActive(action);
     }
 }

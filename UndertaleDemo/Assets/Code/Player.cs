@@ -16,6 +16,7 @@ public class Player : MonoBehaviour
     public static Action<int> OnPlayerBaseHpChanged;
     public static Action<int, int> OnPlayerHpChanged;
 
+
     private void Start()
     {
         OnPlayerLvlChanged?.Invoke(LVL);
@@ -59,6 +60,21 @@ public class Player : MonoBehaviour
         }
         OnPlayerHpChanged(HP, BaseHP);
     }
+
+    public void ClaimReward(int gold, int exp)
+    {
+        GOLD += gold;
+        EXP += exp;
+
+        if (EXP >= LVL * 10)
+        {
+            EXP -= LVL * 10;
+            LVL += 1;
+            BaseDamage += 5;
+            BaseHP += 10;
+            Heal(10);
+        }
+    }   
 
     public int InventorySize()
     {
