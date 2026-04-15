@@ -32,6 +32,7 @@ public class BattleUIManager : MonoBehaviour
 
     [SerializeField] private int SelectedItem;
     [SerializeField] private Menu CurrentMenu = Menu.Options;
+    [SerializeField] private InkControll inkController;
 
     // --- Sta³e ---
     const int OptionsCount = 4;
@@ -61,9 +62,16 @@ public class BattleUIManager : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.RightArrow)) { ChooseOptionOrItem(Direction.Right); }//Strza³ka w prawo
 
 
-        if (Input.GetKeyDown(KeyCode.Return))//Enter
+        if (Input.GetKeyDown(KeyCode.Return))
         {
-            ProgressUI();
+            if (inkController.IsDialogueActive())
+            {
+                inkController.ShowNextLine(); 
+            }
+            else
+            {
+                ProgressUI(); 
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.RightShift))//Shift
@@ -154,7 +162,8 @@ public class BattleUIManager : MonoBehaviour
                     dialogueScene.gameObject.SetActive(true);
                     CurrentMenu = Menu.DialogueOptions;
 
-                    //Kod do Dialogów
+                    //kod dialogow act
+                    inkController.StartDialogue(battleNPC.npcID, "act");
 
                     break;
                 case 2:
@@ -167,6 +176,7 @@ public class BattleUIManager : MonoBehaviour
                     CurrentMenu = Menu.MercyOptions;
 
                     //Kod do Dialogów Mercy
+                    inkController.StartDialogue(battleNPC.npcID, "mercy");
 
                     break;
             }
