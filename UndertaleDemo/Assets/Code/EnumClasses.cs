@@ -15,7 +15,7 @@ enum Menu
     Stats,
     DialogueOptions,
     MercyOptions,
-    Fight
+    Attack
 }
 
 public enum GameState

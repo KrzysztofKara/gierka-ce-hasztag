@@ -8,7 +8,7 @@ public class StateManager : MonoBehaviour
 
     private void Start()
     {
-        CurrentGameState = GameState.BattleMenu;
+        CurrentGameState = GameState.Gameplay;
     }
 }
 
