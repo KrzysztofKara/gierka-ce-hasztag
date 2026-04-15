@@ -65,6 +65,7 @@ public class Player : MonoBehaviour
     {
         GOLD += gold;
         EXP += exp;
+        OnPlayerGoldChanged?.Invoke(GOLD);
 
         if (EXP >= LVL * 10)
         {
@@ -73,6 +74,7 @@ public class Player : MonoBehaviour
             BaseDamage += 5;
             BaseHP += 10;
             Heal(10);
+            OnPlayerLvlChanged?.Invoke(LVL);
         }
     }   
 
