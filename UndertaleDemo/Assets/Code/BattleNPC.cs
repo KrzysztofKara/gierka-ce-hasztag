@@ -9,13 +9,13 @@ public class BattleNPC : MonoBehaviour
     [SerializeField] Image _NPCBackground;
     [SerializeField] Image _NPCSprite;
     public string npcID; 
-    public void SetNPCsprite(Image sprite)
+    public void SetNPCsprite(Sprite sprite)
     {
-        if (sprite != null) _NPCSprite = sprite;
+        if (sprite != null) _NPCSprite.sprite = sprite;
     }
 
-    public void SetNPCBackground(Image sprite)
+    public void SetNPCBackground(Sprite sprite)
     {
-        if (sprite != null) _NPCBackground = sprite;
+        if (sprite != null) _NPCBackground.sprite = sprite;
     }
 }

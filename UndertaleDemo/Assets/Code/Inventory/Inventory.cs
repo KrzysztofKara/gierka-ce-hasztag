@@ -116,6 +116,7 @@ public class Inventory
                 RemoveItem(item);
                 break;
         }
+        OnItemUse?.Invoke(Items[index]);
     }
 
 }

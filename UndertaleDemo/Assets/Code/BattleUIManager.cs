@@ -1,20 +1,15 @@
+using System;
 using System.Xml.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.OSX;
 using UnityEngine.UI;
-public enum Direction
-{
-    Up,
-    Down,
-    Right,
-    Left
-}
 
 public class BattleUIManager : MonoBehaviour
 {
 
-    [SerializeField] private GameObject _BattleUI;
+    [SerializeField] public GameObject _BattleUI;
 
     [SerializeField] private BattleNPC battleNPC;
 
@@ -23,14 +18,15 @@ public class BattleUIManager : MonoBehaviour
 
     [SerializeField] private GameObject _FightScene;
     [SerializeField] private GameObject _AttackScene;
-    [SerializeField] private GameObject _DialogueScene;
     [SerializeField] private GameObject _Inventory;
-    [SerializeField] private GameObject _ItemDescription;
 
+    [SerializeField] private ItemDescription itemDescription;
     [SerializeField] private BattleHP battleHP;
     [SerializeField] private BattleOptions battleOptions;
     [SerializeField] private InventorySlots inventorySlots;
     [SerializeField] private UsageOptions usageOptions;
+    [SerializeField] private DialougeScene dialogueScene;
+
 
     [SerializeField] private Player player;
 
@@ -42,10 +38,6 @@ public class BattleUIManager : MonoBehaviour
     const int OptionsCount = 4;
     const int itemOptionsCount = 2;
 
-    private void Start()
-    {
-        battleOptions.Activate(0);
-    }
 
     private void OnEnable()
     {
@@ -87,29 +79,43 @@ public class BattleUIManager : MonoBehaviour
             GetBack();
         }
     }
-    
 
 
 
-    private void UpdateHP(int baseHP, int newHP)
+
+    /// <summary>
+    /// Aktywujê Bitwê z spotkanym NPC
+    /// </summary>
+    public void StartBattle()
     {
-        battleHP.UpdateHP(baseHP, newHP);
+        _BattleUI.SetActive(true);
+        battleOptions.Activate(0);
+        ResetOptions();
+        dialogueScene.SetContent("");
     }
 
-    private void UpdateNPCSprite(Image sprite)
+    /// <summary>
+    /// Resetuje wszystkie przyciski i ustawia napis nagrody
+    /// </summary>
+    public void EndBattle(string description)
     {
-        battleNPC.SetNPCsprite(sprite);
+        ResetOptions();
+        dialogueScene.gameObject.SetActive(true);
+        dialogueScene.SetContent(description);
     }
 
-    private void UpdateNPCBackground(Image sprite)
+    /// <summary>
+    /// Resetuje Zaznaczone opcje
+    /// </summary>
+    public void ResetOptions()
     {
-        battleNPC.SetNPCBackground(sprite);
+        _Inventory.SetActive(false);
+        _FightScene.SetActive(false);
+        _AttackScene.SetActive(false);
+        dialogueScene.gameObject.SetActive(false);
+        CurrentMenu = Menu.Options;
     }
 
-    private void UpdateSlots(int count)
-    {
-        inventorySlots.UpdateSlots(count);
-    }
 
     /// <summary>
     /// W zale¿noœci od kierunku zacznacza odpowiedni¹ opcjê/item
@@ -140,19 +146,20 @@ public class BattleUIManager : MonoBehaviour
     /// </summary>
     private void ProgressUI()
     {
+        //Jeœli nie jesteœmy w Menu to przerywamy dzia³anie
+        if (StateManager.CurrentGameState != GameState.BattleMenu) { return; }
+
         if (CurrentMenu == Menu.Options)
         {
             switch (battleOptions.Select())
             {
                 case 0:
                     _AttackScene.SetActive(true);
-                    CurrentMenu = Menu.Fight;
-                    
-                    //Kod do progresowania Walki
+                    CurrentMenu = Menu.Attack;
 
                     break;
                 case 1:
-                    _DialogueScene.SetActive(true);
+                    dialogueScene.gameObject.SetActive(true);
                     CurrentMenu = Menu.DialogueOptions;
 
                     //kod dialogow act
@@ -165,7 +172,7 @@ public class BattleUIManager : MonoBehaviour
                     CurrentMenu = Menu.Inventory;//Ustawianie obecnego menu
                     break;
                 case 3:
-                    _DialogueScene.SetActive(true);
+                    dialogueScene.gameObject.SetActive(true);
                     CurrentMenu = Menu.MercyOptions;
 
                     //Kod do Dialogów Mercy
@@ -177,22 +184,21 @@ public class BattleUIManager : MonoBehaviour
         else if (CurrentMenu == Menu.Inventory)
         {
             SelectedItem = inventorySlots.Select();
-            _ItemDescription.SetActive(true);
+            itemDescription.gameObject.SetActive(true);
             usageOptions.Activate(0);
             CurrentMenu = Menu.ItemOptions;
+            itemDescription.SetDescription(player.inventory.Items[SelectedItem].Description); //ustawianie opisu itemu
+            
         }
         else if (CurrentMenu == Menu.ItemOptions)
         {
             switch(usageOptions.Select())
             {
                 case 0:
-                    player.UseItem(SelectedItem);
                     usageOptions.Off();
-                    _ItemDescription.SetActive(false);
-
-                    //Kod do progresowania Walki (zmieniæ)
-                    GetBack();
-
+                    itemDescription.gameObject.SetActive(false);
+                    _Inventory.SetActive(false);
+                    player.UseItem(SelectedItem);//Po u¿yciu itemu odpala siê event i zaczyna siê walka
                     break;
                 case 1:
                     GetBack();
@@ -207,14 +213,16 @@ public class BattleUIManager : MonoBehaviour
     /// </summary>
     private void GetBack()
     {
+        //Jeœli nie jesteœmy w Menu to przerywamy dzia³anie
+        if (StateManager.CurrentGameState != GameState.BattleMenu) { return; }
+
         if (CurrentMenu == Menu.ItemOptions)
         {
-            _ItemDescription.SetActive(false);//Wy³¹czanie okna z opisem Itemu
+            itemDescription.gameObject.SetActive(false);//Wy³¹czanie okna z opisem Itemu
             usageOptions.Off();//Wy³¹czanie serca
             CurrentMenu = Menu.Inventory;//Ustawiamy obecne Menu
             inventorySlots.Activate(SelectedItem);//Zaznaczamy item o którym 
         }
-
         else if (CurrentMenu == Menu.Inventory)
         {
             _Inventory.SetActive(false);
@@ -222,5 +230,52 @@ public class BattleUIManager : MonoBehaviour
             CurrentMenu = Menu.Options;
             battleOptions.Activate(2);
         }
+    }
+
+    /// <summary>
+    /// Rozpoczyna walkê
+    /// </summary>
+    public void StartFight()
+    {
+        _AttackScene.SetActive(false);
+
+        _FightScene.SetActive(true);
+
+        actionPanel.SetSize(type: ActionPanelSize.Square);
+    }
+
+    /// <summary>
+    /// Koñczy walkê
+    /// </summary>
+    public void EndFight()
+    {
+        _AttackScene.SetActive(false);
+        actionPanel.SetSize(type: ActionPanelSize.Max);
+        ResetOptions();
+        battleOptions.Activate(0);
+    }
+
+
+
+    public void SetNPCSprite(Sprite sprite)
+    {
+        battleNPC.SetNPCsprite(sprite);
+    }
+
+    public void SetNPCBackground(Sprite sprite)
+    {
+        battleNPC.SetNPCBackground(sprite);
+    }
+
+
+
+    private void UpdateHP(int baseHP, int newHP)
+    {
+        battleHP.UpdateHP(baseHP, newHP);
+    }
+
+    private void UpdateSlots(int count)
+    {
+        inventorySlots.UpdateSlots(count);
     }
 }

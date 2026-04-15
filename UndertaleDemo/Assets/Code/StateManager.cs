@@ -8,17 +8,7 @@ public class StateManager : MonoBehaviour
 
     private void Start()
     {
-        CurrentGameState = GameState.BattleMenu;
+        CurrentGameState = GameState.Gameplay;
     }
 }
 
-public enum GameState
-{
-    Gameplay,
-    MainMenu,
-    BattleMenu,
-    GameplayDialogue,
-    BattleDialogue,
-    Fight,
-    CutScene
-}

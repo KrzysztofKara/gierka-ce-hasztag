@@ -14,16 +14,6 @@ public class ActionPanel : MonoBehaviour
 
     [SerializeField] float AnimationSpeed;
 
-     //=== Testy ===
-    //private void Update()
-    //{
-    //    if (Input.GetKeyDown(KeyCode.Escape))
-    //    {
-    //        SetSize(height:200, width: 500, type: ActionPanelSize.Square);
-    //    }
-    //}
-
-
     /// <summary>
     /// Ustawia (Domyœlnie animacj¹) rozmiar dla Panelu (mo¿na podaæ tylko jeden wymiar).
     /// </summary>
@@ -41,7 +31,7 @@ public class ActionPanel : MonoBehaviour
             }
             else if (type == ActionPanelSize.Square)
             {
-                StartCoroutine(AnimateSize(AnimationAxis.Horizontal, AnimationSpeed, SquareWidth, DefaultHeight));
+                StartCoroutine(AnimateSize(AnimationAxis.Horizontal, AnimationSpeed, SquareWidth, SquareWidth));
             }
         }
         else
@@ -95,14 +85,3 @@ public class ActionPanel : MonoBehaviour
     }
 }
 
-public enum ActionPanelSize
-{
-    Square,
-    Max,
-}
-
-public enum AnimationAxis
-{
-    Horizontal,
-    Vertical,
-}
