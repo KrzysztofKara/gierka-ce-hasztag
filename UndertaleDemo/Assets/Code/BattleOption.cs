@@ -1,6 +1,7 @@
 using UnityEngine.UI;
 using UnityEngine;
 using System;
+using Ink.Runtime;
 
 public class BattleOption : MonoBehaviour
 {
@@ -10,11 +11,16 @@ public class BattleOption : MonoBehaviour
 
     [SerializeField] private Image Sprite;
 
+    void Start()
+    {
+        Debug.Log("MENU START");
+    }
+
     public void Active(bool action)
     {
         if (action) Sprite.sprite = ActiveSprite;
-        else        Sprite.sprite = UnactiveSprite;
-        
+        else Sprite.sprite = UnactiveSprite;
+
         Heart.SetActive(action);
     }
 }
