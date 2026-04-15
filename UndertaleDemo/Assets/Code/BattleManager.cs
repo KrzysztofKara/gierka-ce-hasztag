@@ -49,7 +49,7 @@ public class BattleManager : MonoBehaviour
     }
     private IEnumerator EndBattleCoroutine(NPC npc)
     {
-        if (currentNPC == null) //Jak NPC ded³ to ustawiamy sprite'a œmierci
+        if (npc.currentHP < 1) //Jak NPC ded³ to ustawiamy sprite'a œmierci
         { 
             battleUIManager.SetNPCSprite(DeathSprite);
             battleUIManager.EndBattle($"Wygrales! Zyskujesz {npc.Gold} Golda i {npc.EXP} Exp'a");
@@ -65,7 +65,7 @@ public class BattleManager : MonoBehaviour
 
         StateManager.CurrentGameState = GameState.CutScene;
 
-        yield return new WaitForSeconds(1f); //czekamy przez 1 sekundê
+        yield return new WaitForSeconds(2f); //czekamy przez 2 sekundy
 
         StateManager.CurrentGameState = GameState.Gameplay;
         battleUIManager._BattleUI.SetActive(false);

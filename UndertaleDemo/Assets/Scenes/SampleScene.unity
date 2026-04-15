@@ -798,11 +798,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 826483843968414181, guid: bd1afabd3761f644b9a4ff91de1ef14f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3.895
+      value: 1.76
       objectReference: {fileID: 0}
     - target: {fileID: 826483843968414181, guid: bd1afabd3761f644b9a4ff91de1ef14f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.121
+      value: -2.28
       objectReference: {fileID: 0}
     - target: {fileID: 826483843968414181, guid: bd1afabd3761f644b9a4ff91de1ef14f, type: 3}
       propertyPath: m_LocalPosition.z
@@ -847,6 +847,14 @@ PrefabInstance:
     - target: {fileID: 2739898135569146588, guid: bd1afabd3761f644b9a4ff91de1ef14f, type: 3}
       propertyPath: m_SpriteTilingProperty.oldSize.y
       value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2888725498993706359, guid: bd1afabd3761f644b9a4ff91de1ef14f, type: 3}
+      propertyPath: EXP
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 2888725498993706359, guid: bd1afabd3761f644b9a4ff91de1ef14f, type: 3}
+      propertyPath: Gold
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 2888725498993706359, guid: bd1afabd3761f644b9a4ff91de1ef14f, type: 3}
       propertyPath: maxHP
@@ -2481,7 +2489,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1358809075}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -9314,18 +9322,18 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.04, y: -0.7}
+  m_Offset: {x: -0.010554723, y: -0.073591284}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2.02, y: 3.58}
+    oldSize: {x: 0.2, y: 0.3}
     newSize: {x: 2.02, y: 3.58}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.4, y: 1.4}
+  m_Size: {x: 0.15773104, y: 0.16551782}
   m_EdgeRadius: 0
 --- !u!212 &1833756490
 SpriteRenderer:
@@ -9389,7 +9397,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.01, y: -0.02, z: 0}
-  m_LocalScale: {x: 0.13, y: 0.13, z: 0.13}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -11202,5 +11210,7 @@ SceneRoots:
   - {fileID: 1731515874}
   - {fileID: 1530501168}
   - {fileID: 52595160}
-  - {fileID: 1749101236}
   - {fileID: 317334420}
+  - {fileID: 425615314}
+  - {fileID: 1946569676}
+  - {fileID: 2006868677}
