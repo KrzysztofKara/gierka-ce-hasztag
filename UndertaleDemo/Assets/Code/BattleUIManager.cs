@@ -1,4 +1,6 @@
+using System;
 using System.Xml.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.OSX;
@@ -7,7 +9,7 @@ using UnityEngine.UI;
 public class BattleUIManager : MonoBehaviour
 {
 
-    [SerializeField] private GameObject _BattleUI;
+    [SerializeField] public GameObject _BattleUI;
 
     [SerializeField] private BattleNPC battleNPC;
 
@@ -16,7 +18,6 @@ public class BattleUIManager : MonoBehaviour
 
     [SerializeField] private GameObject _FightScene;
     [SerializeField] private GameObject _AttackScene;
-    [SerializeField] private GameObject _DialogueScene;
     [SerializeField] private GameObject _Inventory;
 
     [SerializeField] private ItemDescription itemDescription;
@@ -24,6 +25,8 @@ public class BattleUIManager : MonoBehaviour
     [SerializeField] private BattleOptions battleOptions;
     [SerializeField] private InventorySlots inventorySlots;
     [SerializeField] private UsageOptions usageOptions;
+    [SerializeField] private DialougeScene dialogueScene;
+
 
     [SerializeField] private Player player;
 
@@ -72,28 +75,37 @@ public class BattleUIManager : MonoBehaviour
 
 
 
-
+    /// <summary>
+    /// Aktywujê Bitwê z spotkanym NPC
+    /// </summary>
     public void StartBattle()
     {
         _BattleUI.SetActive(true);
         battleOptions.Activate(0);
         ResetOptions();
+        dialogueScene.SetContent("");
     }
 
-    public void EndBattle()
+    /// <summary>
+    /// Resetuje wszystkie przyciski i ustawia napis nagrody
+    /// </summary>
+    public void EndBattle(string description)
     {
-        _BattleUI.SetActive(false);
         ResetOptions();
+        dialogueScene.gameObject.SetActive(true);
+        dialogueScene.SetContent(description);
     }
 
+    /// <summary>
+    /// Resetuje Zaznaczone opcje
+    /// </summary>
     public void ResetOptions()
     {
         _Inventory.SetActive(false);
         _FightScene.SetActive(false);
         _AttackScene.SetActive(false);
+        dialogueScene.gameObject.SetActive(false);
         CurrentMenu = Menu.Options;
-        battleOptions.Activate(0);
-
     }
 
 
@@ -136,12 +148,10 @@ public class BattleUIManager : MonoBehaviour
                 case 0:
                     _AttackScene.SetActive(true);
                     CurrentMenu = Menu.Attack;
-                    
-                    //Kod do progresowania Walki
 
                     break;
                 case 1:
-                    _DialogueScene.SetActive(true);
+                    dialogueScene.gameObject.SetActive(true);
                     CurrentMenu = Menu.DialogueOptions;
 
                     //Kod do Dialogów
@@ -153,7 +163,7 @@ public class BattleUIManager : MonoBehaviour
                     CurrentMenu = Menu.Inventory;//Ustawianie obecnego menu
                     break;
                 case 3:
-                    _DialogueScene.SetActive(true);
+                    dialogueScene.gameObject.SetActive(true);
                     CurrentMenu = Menu.MercyOptions;
 
                     //Kod do Dialogów Mercy
@@ -175,13 +185,10 @@ public class BattleUIManager : MonoBehaviour
             switch(usageOptions.Select())
             {
                 case 0:
-                    player.UseItem(SelectedItem);
                     usageOptions.Off();
                     itemDescription.gameObject.SetActive(false);
-
-                    //Kod do progresowania Walki (zmieniæ)
-                    GetBack();
-
+                    _Inventory.SetActive(false);
+                    player.UseItem(SelectedItem);//Po u¿yciu itemu odpala siê event i zaczyna siê walka
                     break;
                 case 1:
                     GetBack();
@@ -215,6 +222,9 @@ public class BattleUIManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Rozpoczyna walkê
+    /// </summary>
     public void StartFight()
     {
         _AttackScene.SetActive(false);
@@ -224,9 +234,15 @@ public class BattleUIManager : MonoBehaviour
         actionPanel.SetSize(type: ActionPanelSize.Square);
     }
 
+    /// <summary>
+    /// Koñczy walkê
+    /// </summary>
     public void EndFight()
     {
         _AttackScene.SetActive(false);
+        actionPanel.SetSize(type: ActionPanelSize.Max);
+        ResetOptions();
+        battleOptions.Activate(0);
     }
 
 

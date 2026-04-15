@@ -7,7 +7,10 @@ public class NPC : MonoBehaviour
     public string npcName;
     public int maxHP = 100;
     public int currentHP;
+    public int Gold;
+    public int EXP;
     public bool canFight;
+
 
     public Sprite battleSprite; // sprite do pokazania w UI
     public static event Action<NPC> OnPlayerMeetNPC;// Event wywo³ywany przy wejœciu w trigger
@@ -18,7 +21,11 @@ public class NPC : MonoBehaviour
         currentHP = maxHP;
     }
 
-    public void TakeDamage(int dmg)
+    /// <summary>
+    /// Zadaje obra¿enia NPC z którym obecnie walczymy
+    /// </summary>
+    /// <returns>Czy NPC dalej ¿yje czy ded³</returns>
+    public bool TakeDamage(int dmg)
     {
         currentHP -= dmg;
         Debug.Log("chlop");
@@ -28,9 +35,14 @@ public class NPC : MonoBehaviour
             Debug.Log(npcName + " ded³");
             OnNPCDeath?.Invoke(this);
             gameObject.SetActive(false);//Jak zginie to znika z œwiata
+            return false;
         }
+        return true;
     }
 
+    /// <summary>
+    /// Jak spotkamy NPC to odpala siê ten trigger
+    /// </summary>
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player") && canFight)

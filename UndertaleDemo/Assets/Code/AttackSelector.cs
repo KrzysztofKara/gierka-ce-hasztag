@@ -16,7 +16,8 @@ public class AttackSelector : MonoBehaviour
     {
         if (SelectorRigbody != null)
         {
-            SelectorRigbody.velocity = Vector2.left * Speed;
+            System.Random random = new System.Random();
+            SelectorRigbody.velocity = Vector2.left * (int)(Speed + Speed * random.NextDouble());
         }
     }
 

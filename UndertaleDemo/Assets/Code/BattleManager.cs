@@ -8,15 +8,15 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private Player player;
     [SerializeField] private Sprite DeathSprite;
     private NPC currentNPC;
-    
 
     private void OnEnable()
     {
         NPC.OnPlayerMeetNPC += StartBattle;
         NPC.OnNPCDeath += EndBattle;
         AttackSelector.OnSliderSelected += DealDamage;
-    }
 
+        player.inventory.OnItemUse += ItemUsed;
+    }
     private void OnDisable()
     {
         NPC.OnPlayerMeetNPC -= StartBattle;
@@ -26,8 +26,9 @@ public class BattleManager : MonoBehaviour
 
 
 
-
-
+    /// <summary>
+    /// rozpoczyna walkê z podanym NPC
+    /// </summary>
     private void StartBattle(NPC npc)
     {
         currentNPC = npc;
@@ -39,39 +40,72 @@ public class BattleManager : MonoBehaviour
         Debug.Log("Rozpoczêto walkê z: " + npc.npcName);
     }
 
-
+    /// <summary>
+    /// ustawia sprite nie¿yj¹cego NPC i po sekundzie koñczy walkê
+    /// </summary>
     private void EndBattle(NPC npc)
     {
-        StartCoroutine(EndBattleCoroutine());
+        StartCoroutine(EndBattleCoroutine(npc));
     }
-
-    private IEnumerator EndBattleCoroutine()
+    private IEnumerator EndBattleCoroutine(NPC npc)
     {
-        battleUIManager.SetNPCSprite(DeathSprite);
+        if (currentNPC == null) //Jak NPC ded³ to ustawiamy sprite'a œmierci
+        { 
+            battleUIManager.SetNPCSprite(DeathSprite);
+            battleUIManager.EndBattle($"Wygrales! Zyskujesz {npc.Gold} Golda i {npc.EXP} Exp'a");
+            player.ClaimReward(npc.Gold, npc.EXP);
+        }
+        else
+        {
+            npc.canFight = false; //Zmieniamy npc ¿eby ju¿ nie powodowa³ walki
+
+            battleUIManager.EndBattle($"Wygrales! Zyskujesz {npc.Gold/2} Golda i {npc.EXP/2} Exp'a");
+            player.ClaimReward(npc.Gold/2, npc.EXP/2);
+        }
 
         StateManager.CurrentGameState = GameState.CutScene;
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1f); //czekamy przez 1 sekundê
 
         StateManager.CurrentGameState = GameState.Gameplay;
-
-        battleUIManager.EndBattle();
+        battleUIManager._BattleUI.SetActive(false);
     }
-
 
     /// <summary>
     /// W zale¿noœci od powodzenia ataku gracza zadaje obra¿enia obecnemu NPC
     /// </summary>
-    public void DealDamage(float precent)
+    private void DealDamage(float precent)
     {
-        StateManager.CurrentGameState = GameState.Fight;
-        battleUIManager.StartFight();
-
         if (currentNPC == null) return;
 
         float dmg = player.GetAtack();
-        dmg = dmg - (dmg * precent);
+        dmg = dmg - (dmg * precent); //W zale¿noœci jak dobry by³ atak gracza zadajemy odpowieni damage
 
-        currentNPC.TakeDamage((int)dmg);
+        if (!currentNPC.TakeDamage((int)dmg)) currentNPC = null; //Jeœli NPC nam dednie to go usuwamy
+
+        StartFight();
+    }
+    /// <summary>
+    /// Rozpoczyna walkê (jeœli NPC ¿yje)
+    /// </summary>
+    private void StartFight()
+    {
+        if (currentNPC == null) return;
+        StateManager.CurrentGameState = GameState.Fight;
+        battleUIManager.StartFight();
+    }
+
+    //Koñczy walkê 
+    private void EndFight()
+    {
+        StateManager.CurrentGameState = GameState.BattleMenu;
+        battleUIManager.EndFight();
+    }
+
+
+
+    private void ItemUsed(Item item)
+    {
+        StartFight();
     }
 }
