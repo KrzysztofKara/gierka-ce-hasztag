@@ -102,7 +102,7 @@ public class Inventory
     public void UseItem(int index, Player player)
     {
         Item item = Items[index];
-
+        OnItemUse?.Invoke(Items[index]);
         Debug.Log("dosz³o");
 
         switch (item.ItemType)
@@ -116,7 +116,7 @@ public class Inventory
                 RemoveItem(item);
                 break;
         }
-        OnItemUse?.Invoke(Items[index]);
+        
     }
 
 }

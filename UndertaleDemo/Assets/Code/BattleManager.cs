@@ -14,6 +14,8 @@ public class BattleManager : MonoBehaviour
         NPC.OnPlayerMeetNPC += StartBattle;
         NPC.OnNPCDeath += EndBattle;
         AttackSelector.OnSliderSelected += DealDamage;
+        InkControll.OnDialogueEnd += StartFight;
+        InkControll.OnMercy += EndBattle;
 
         player.inventory.OnItemUse += ItemUsed;
     }
@@ -22,6 +24,9 @@ public class BattleManager : MonoBehaviour
         NPC.OnPlayerMeetNPC -= StartBattle;
         NPC.OnNPCDeath -= EndBattle;
         AttackSelector.OnSliderSelected -= DealDamage;
+        InkControll.OnDialogueEnd -= StartFight;
+
+        player.inventory.OnItemUse -= ItemUsed;
     }
 
 
@@ -45,7 +50,7 @@ public class BattleManager : MonoBehaviour
     /// </summary>
     private void EndBattle(NPC npc)
     {
-        StartCoroutine(EndBattleCoroutine(npc));
+        StartCoroutine(EndBattleCoroutine(currentNPC));
     }
     private IEnumerator EndBattleCoroutine(NPC npc)
     {
@@ -93,6 +98,8 @@ public class BattleManager : MonoBehaviour
         if (currentNPC == null) return;
         StateManager.CurrentGameState = GameState.Fight;
         battleUIManager.StartFight();
+
+        StartCoroutine(CzekojIwylocz());
     }
 
     //Koñczy walkê 
@@ -102,7 +109,12 @@ public class BattleManager : MonoBehaviour
         battleUIManager.EndFight();
     }
 
-
+    private IEnumerator CzekojIwylocz()
+    {
+        
+        yield return new WaitForSeconds(3f);
+        EndFight();
+    }
 
     private void ItemUsed(Item item)
     {

@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using Ink.Runtime;
+using System;
 
 public class InkControll : MonoBehaviour
 {
     [SerializeField] private TextAsset inkJSON;
     [SerializeField] private TextMeshProUGUI dialogueText;
+
+    public static event Action OnDialogueEnd; 
+    public static event Action<NPC> OnMercy; 
 
     private Story story;
 
@@ -26,10 +30,10 @@ public class InkControll : MonoBehaviour
         dialogueActive = true;
         dialogueText.gameObject.SetActive(true);
 
-        ShowNextLine();
+        ShowNextLine(action);
     }
 
-    public void ShowNextLine()
+    public void ShowNextLine(string action = "")
     {
         if (!dialogueActive) return;
 
@@ -44,6 +48,14 @@ public class InkControll : MonoBehaviour
             Debug.Log("KONIEC DIALOGU");
             dialogueActive = false;
             dialogueText.gameObject.SetActive(false);
+            if (action == "mercy")
+            {
+                OnMercy?.Invoke(null);
+            }
+            else
+            {
+                OnDialogueEnd?.Invoke();
+            }
         }
     }
 

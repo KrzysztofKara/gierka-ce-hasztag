@@ -53,16 +53,29 @@ public class InventoryManagerUI : MonoBehaviour
 
     private void Start()
     {
-        //Item item1 = new Item("cep bojowy", "Potê¿na broñ", 2137, TypeOfItem.Weapon, damage: 10);
-        //Item item2 = new Item("wiadro", "Jakieœ wiadro które znalaz³es u dziadka na gospodarstwie, ma dziurê na oczy", 2137, TypeOfItem.Armor, protection:24);
-        //Item item3 = new Item("Odwar z Nagietka", "Uwa¿ony przez cyrulika Henryka", 2137, TypeOfItem.Healing, healingAmount:10);
+        Item item1 = new Item("cep bojowy", "Potezna bron", 2137, TypeOfItem.Weapon, damage: 15);
+        Item item2 = new Item("noz kuchenny", "Dobrze kroi sie nim chleb", 2137, TypeOfItem.Weapon, damage: 10);
+        Item item3 = new Item("patyk", "Jakiœ patyk, chyba oogway'a", 2137, TypeOfItem.Weapon, damage: 6);
+
+
+        //Item item2 = new Item("metalowe wiadro", "Jakies wiadro ktore znalazles u dziadka na gospodarstwie, ma dziure na oczy", 2137, TypeOfItem.Armor, protection: 24);
+        //Item item2 = new Item("", "Jakies wiadro ktore znalazles u dziadka na gospodarstwie, ma dziure na oczy", 2137, TypeOfItem.Armor, protection: 24);
+        //Item item2 = new Item("wiadro", "Jakies wiadro ktore znalazles u dziadka na gospodarstwie, ma dziure na oczy", 2137, TypeOfItem.Armor, protection: 24);
+
+        //Item item3 = new Item("Odwar z Nagietka", "Uwazony przez cyrulika Henryka", 2137, TypeOfItem.Healing, healingAmount: 10);
         //Item item4 = new Item("patyk", "Jakiœ patyk, chyba oogway'a", 2137, TypeOfItem.Default);
         //Item item5 = new Item("patyk2", "Jakiœ patyk2", 2137, TypeOfItem.Default);
+
+
+
+
         //player.inventory.AddItem(item1);
-        //player.inventory.AddItem(item2);
+        player.inventory.AddItem(item2);
         //player.inventory.AddItem(item4);
         //player.inventory.AddItem(item3);
         //player.inventory.AddItem(item5);
+
+
 
     }
 
